@@ -1,0 +1,3 @@
+- Handle cancelling oauth login
+- make cookie expire when auth token expires
+- Save username into session and show in header
