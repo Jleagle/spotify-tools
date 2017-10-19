@@ -29,7 +29,9 @@
                 {{if .LoggedIn}}
                 <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
                 {{else}}
-                <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                <a class="navbar-brand" href="/login">
+                    <img src="/assets/connect.svg" height="30" alt="Login">
+                </a>
                 {{end}}
             </ul>
         </div>

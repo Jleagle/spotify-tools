@@ -1,3 +1,3 @@
-- Handle cancelling oauth login
-- make cookie expire when auth token expires
-- Save username into session and show in header
+- make cookie expire when auth token expires, save token into seperate session storage, everything else can be regular session cookie?
+- get details on login, Save username into session and show in header
+- Make the login page show why we need each permission

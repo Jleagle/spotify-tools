@@ -8,14 +8,8 @@ import (
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, map[string]string{
-		session.LastPage: "",
-	})
+	session.Write(w, r, session.LastPage, "/")
 
-	templateVars := templateVars{}
-	templateVars.LoggedIn = session.IsLoggedIn(w, r)
-	templateVars.Flashes = session.GetFlashes(w, r)
-
-	returnTemplate(w, "home", templateVars)
+	returnTemplate(w, r, "home", templateVars{}, nil)
 	return
 }

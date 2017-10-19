@@ -7,22 +7,25 @@ import (
 )
 
 const (
-	Token    = "token"
-	LastPage = "last-page"
+	Token    = "token"     // Spotify access token
+	LastPage = "last-page" // The last page a user was on for page flow
+	State    = "state"     // For OAuth security
 )
 
-func getCookieStore() *sessions.CookieStore {
+func getSession(r *http.Request) *sessions.Session {
 
-	return sessions.NewCookieStore([]byte("something-very-secret"))
-}
-
-func Read(w http.ResponseWriter, r *http.Request, key string) string {
-
-	store := getCookieStore()
+	store := sessions.NewCookieStore([]byte("something-very-secret"))
 	session, err := store.Get(r, "month")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		// todo, show error page
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	return session
+}
+
+func Read(r *http.Request, key string) string {
+
+	session := getSession(r)
 
 	if session.Values[key] == nil {
 		session.Values[key] = ""
@@ -31,47 +34,40 @@ func Read(w http.ResponseWriter, r *http.Request, key string) string {
 	return session.Values[key].(string)
 }
 
-func Write(w http.ResponseWriter, r *http.Request, values map[string]string) (err error) {
+func Write(w http.ResponseWriter, r *http.Request, name string, value string) {
 
-	store := getCookieStore()
-	session, err := store.Get(r, "month")
+	session := getSession(r)
+	session.Values[name] = value
+
+	err := session.Save(r, w)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		// todo, show error page
 	}
-
-	for k, v := range values {
-		session.Values[k] = v
-	}
-
-	session.Save(r, w)
-	return err
-}
-
-func IsLoggedIn(w http.ResponseWriter, r *http.Request) bool {
-	return Read(w, r, Token) != ""
 }
 
 func GetFlashes(w http.ResponseWriter, r *http.Request) []interface{} {
 
-	store := getCookieStore()
-	session, err := store.Get(r, "month")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	session := getSession(r)
 
 	flashes := session.Flashes()
-	session.Save(r, w)
+	err := session.Save(r, w)
+	if err != nil {
+		// todo, show error page
+	}
 	return flashes
 }
 
 func SetFlash(w http.ResponseWriter, r *http.Request, flash string) {
 
-	store := getCookieStore()
-	session, err := store.Get(r, "month")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	session := getSession(r)
 
 	session.AddFlash(flash)
-	session.Save(r, w)
+	err := session.Save(r, w)
+	if err != nil {
+		// todo, show error page
+	}
+}
+
+func IsLoggedIn(r *http.Request) bool {
+	return Read(r, Token) != ""
 }

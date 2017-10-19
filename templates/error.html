@@ -2,10 +2,10 @@
 
 <div class="jumbotron pt-4 pb-4">
     <h1 class="display-3">
-        {{if .HTTPCode}} Error: {{.HTTPCode}} {{else}} Error {{end}}
+        {{if .ErrorCode}} Error: {{.ErrorCode}} {{else}} Error {{end}}
     </h1>
     <p class="lead">
-        {{if .Message}} {{.Message}} {{else}} Something has gone wrong! {{end}}
+        {{if .ErrorMessage}} {{.ErrorMessage}} {{else}} Something has gone wrong! {{end}}
     </p>
 </div>
 
