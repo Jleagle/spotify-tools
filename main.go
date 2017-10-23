@@ -7,11 +7,13 @@ import (
 	"path"
 	"runtime"
 
-	"github.com/Jleagle/spotify-tools/session"
-	"github.com/go-chi/chi"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/Jleagle/spotify-tools/session"
+	"github.com/go-chi/chi"
+	"github.com/zmb3/spotify"
 )
 
 func main() {
@@ -85,4 +87,5 @@ type templateVars struct {
 	Flashes      []interface{}
 	ErrorCode    string
 	ErrorMessage string
+	Playlists    []spotify.SimplePlaylist // Shuffle
 }

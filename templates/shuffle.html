@@ -3,4 +3,19 @@
 <h1>Shuffle</h1>
 <p>Shuffle in Spotify probably doesnt do what you think it does and has a tendency to play certain songs more while leaving others unplayed.</p>
 
+{{ if .LoggedIn}}
+<ul class="list-group">
+    {{ range $key, $value := .Playlists }}
+    {{ if gt .Tracks.Total 1}}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ .Name }}
+        <span class="badge badge-primary badge-pill">{{ .Tracks.Total }} tracks</span>
+    </li>
+    {{ end }}
+    {{ end }}
+</ul>
+{{else}}
+x
+{{end}}
+
 {{ template "footer" .}} {{end}}

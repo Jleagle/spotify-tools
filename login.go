@@ -2,18 +2,11 @@ package main
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/Jleagle/spotify-tools/helpers"
 	"github.com/Jleagle/spotify-tools/session"
-	"github.com/zmb3/spotify"
+	spot "github.com/Jleagle/spotify-tools/spotify"
 )
-
-func getAuthenticator() (authenticator spotify.Authenticator) {
-	authenticator = spotify.NewAuthenticator("http://localhost:8084/login-callback", spotify.ScopeUserReadPrivate)
-	authenticator.SetAuthInfo(os.Getenv("SPOTIFY_CLIENT_ID"), os.Getenv("SPOTIFY_CLIENT_SECRET"))
-	return authenticator
-}
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -26,7 +19,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		state := helpers.RandomString(6)
 		session.Write(w, r, session.State, state)
 
-		auth := getAuthenticator()
+		auth := spot.GetAuthenticator()
 		http.Redirect(w, r, auth.AuthURL(state), 302)
 		return
 	}
@@ -52,7 +45,7 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auth := getAuthenticator()
+	auth := spot.GetAuthenticator()
 	state := session.Read(r, session.State)
 
 	tok, err := auth.Token(state, r)
@@ -77,8 +70,13 @@ func postlogin(w http.ResponseWriter, r *http.Request) {
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 
+	lastPage := session.Read(r, session.LastPage)
+
 	session.Write(w, r, session.Token, "")
+	session.Write(w, r, session.State, "")
+	session.Write(w, r, session.LastPage, "")
+
 	session.SetFlash(w, r, "Logged Out!")
 
-	http.Redirect(w, r, "/", 302)
+	http.Redirect(w, r, lastPage, 302)
 }
