@@ -3,18 +3,23 @@ package main
 import (
 	"html/template"
 	"log"
+	"math/rand"
 	"net/http"
-	"path"
-	"runtime"
-
 	"os"
+	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
+	"time"
 
 	"github.com/Jleagle/spotify-tools/session"
 	"github.com/go-chi/chi"
 	"github.com/zmb3/spotify"
 )
+
+func init() {
+	rand.Seed(time.Now().UTC().UnixNano())
+}
 
 func main() {
 
@@ -24,6 +29,7 @@ func main() {
 	r.Get("/logout", logoutHandler)
 	r.Get("/login-callback", loginCallbackHandler)
 	r.Get("/shuffle", shuffleHandler)
+	r.Get("/shuffle/{playlist}/{new}", shuffleActionHandler)
 
 	// Assets
 	workDir, _ := os.Getwd()

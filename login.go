@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/Jleagle/spotify-tools/helpers"
+	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/spotify-tools/session"
 	spot "github.com/Jleagle/spotify-tools/spotify"
 )
@@ -16,7 +16,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.URL.Query().Get("auth") == "1" {
-		state := helpers.RandomString(6)
+		state := helpers.RandomString(6, "abcdefghijklmnopqrstuvwxyz")
 		session.Write(w, r, session.State, state)
 
 		auth := spot.GetAuthenticator()

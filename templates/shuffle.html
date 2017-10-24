@@ -1,19 +1,34 @@
 {{define "shuffle"}} {{ template "header" .}}
 
 <h1>Shuffle</h1>
-<p>Shuffle in Spotify probably doesnt do what you think it does and has a tendency to play certain songs more while leaving others unplayed.</p>
+<p>Shuffle in Spotify probably doesnt do what you think it does and has a tendency to play certain songs more while
+    leaving others unplayed.</p>
 
 {{ if .LoggedIn}}
-<ul class="list-group">
+<table class="table table-striped table-sm">
+    <thead>
+    <tr>
+        <th scope="col">Playlist</th>
+        <th scope="col">Owner</th>
+        <th scope="col">Tracks</th>
+        <th scope="col">Shuffle</th>
+    </tr>
+    </thead>
+    <tbody>
     {{ range $key, $value := .Playlists }}
-    {{ if gt .Tracks.Total 1}}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        {{ .Name }}
-        <span class="badge badge-primary badge-pill">{{ .Tracks.Total }} tracks</span>
-    </li>
+    <tr>
+        <td>{{ .Name }}</td>
+        <td>{{ .Owner.ID }}</td>
+        <td>{{ .Tracks.Total }} tracks</td>
+        <td>
+            <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/0" role="button">Shuffle</a>
+            <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/1" role="button">New Shuffle</a>
+        </td>
+    </tr>
     {{ end }}
-    {{ end }}
-</ul>
+
+    </tbody>
+</table>
 {{else}}
 x
 {{end}}
