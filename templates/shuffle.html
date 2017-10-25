@@ -5,7 +5,7 @@
     leaving others unplayed.</p>
 
 {{ if .LoggedIn}}
-<table class="table table-striped table-sm">
+<table class="table table-hover table-sm">
     <thead>
     <tr>
         <th scope="col">Playlist</th>
@@ -16,13 +16,13 @@
     </thead>
     <tbody>
     {{ range $key, $value := .Playlists }}
-    <tr>
+    <tr class="{{if eq $.Highlight .ID}}table-primary{{end}}">
         <td>{{ .Name }}</td>
         <td>{{ .Owner.ID }}</td>
         <td>{{ .Tracks.Total }} tracks</td>
         <td>
-            <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/0" role="button">Shuffle</a>
-            <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/1" role="button">New Shuffle</a>
+            <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/1" role="button">New Playlist</a>
+            <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/0" role="button">Shuffle Playlist</a>
         </td>
     </tr>
     {{ end }}

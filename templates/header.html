@@ -23,16 +23,18 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link" href="/shuffle">Shuffle</a></li>
+                <li class="nav-item"><a class="nav-link" href="/duplicates">Duplicates</a></li>
             </ul>
 
             <ul class="navbar-nav">
-                {{if .LoggedIn}}
-                <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
-                {{else}}
-                <a class="navbar-brand" href="/login">
-                    <img src="/assets/connect.svg" height="30" alt="Login">
-                </a>
-                {{end}}
+                <li class="nav-item"><a class="nav-link" href="/info">Info</a></li>
+                <li class="nav-item">
+                    {{if .LoggedIn}}
+                    <a class="nav-link" href="/logout">Logout</a>
+                    {{else}}
+                    <a class="nav-link" href="/login">Login</a>
+                    {{end}}
+                </li>
             </ul>
         </div>
     </div>

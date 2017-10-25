@@ -9,24 +9,20 @@ import (
 	"golang.org/x/oauth2"
 )
 
-var Auth = spotify.NewAuthenticator(getDomain()+"/login-callback", getScopes()...)
+func GetAuthenticator() (auth spotify.Authenticator) {
 
-func getDomain() (domain string) {
-	return "http://localhost:8084"
-}
-
-func getScopes() []string {
-	return []string{
+	scopes := []string{
 		spotify.ScopeUserReadEmail,
 		spotify.ScopeUserReadPrivate,
 		spotify.ScopePlaylistReadPrivate,
 		spotify.ScopePlaylistModifyPrivate,
 		spotify.ScopePlaylistModifyPublic,
 	}
-}
-func GetAuthenticator() (auth spotify.Authenticator) {
-	Auth.SetAuthInfo(os.Getenv("SPOTIFY_CLIENT_ID"), os.Getenv("SPOTIFY_CLIENT_SECRET"))
-	return Auth
+
+	auth = spotify.NewAuthenticator("http://localhost:8084"+"/login-callback", scopes...)
+	auth.SetAuthInfo(os.Getenv("SPOTIFY_CLIENT_ID"), os.Getenv("SPOTIFY_CLIENT_SECRET"))
+
+	return auth
 }
 
 func GetClient(r *http.Request) (client spotify.Client) {
@@ -35,7 +31,7 @@ func GetClient(r *http.Request) (client spotify.Client) {
 		AccessToken: session.Read(r, session.Token),
 	}
 
-	return spotify.Authenticator{}.NewClient(token)
+	return GetAuthenticator().NewClient(token)
 }
 
 func GetOptions(limit int, offset int) (opt *spotify.Options) {

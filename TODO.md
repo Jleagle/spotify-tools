@@ -3,3 +3,5 @@
 - Make the login page show why we need each permission
 - pagination on shuffle
 - add github info
+- make sure oauth errors are handled with propper error pages
+- only show shuffle buttons if it can be shuffled

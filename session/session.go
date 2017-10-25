@@ -15,11 +15,17 @@ const (
 func getSession(r *http.Request) *sessions.Session {
 
 	store := sessions.NewCookieStore([]byte("something-very-secret"))
-	session, err := store.Get(r, "month")
+	session, err := store.Get(r, "hour")
 	if err != nil {
 		// todo, show error page
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+
+	session.Options = &sessions.Options{
+		MaxAge: 0, // Session
+		Path:   "/",
+	}
+
 	return session
 }
 

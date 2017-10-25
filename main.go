@@ -26,6 +26,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Get("/", homeHandler)
 	r.Get("/login", loginHandler)
+	r.Get("/info", infoHandler)
 	r.Get("/logout", logoutHandler)
 	r.Get("/login-callback", loginCallbackHandler)
 	r.Get("/shuffle", shuffleHandler)
@@ -44,6 +45,7 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 	// todo, log errors
 	pageData.LoggedIn = session.IsLoggedIn(r)
 	pageData.Flashes = session.GetFlashes(w, r)
+	pageData.Highlight = r.URL.Query().Get("highlight")
 
 	// Get current app path
 	_, file, _, ok := runtime.Caller(0)
@@ -94,4 +96,5 @@ type templateVars struct {
 	ErrorCode    string
 	ErrorMessage string
 	Playlists    []spotify.SimplePlaylist // Shuffle
+	Highlight    string
 }
