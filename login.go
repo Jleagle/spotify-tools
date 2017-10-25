@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/Jleagle/go-helpers/helpers"
-	"github.com/Jleagle/spotify-tools/session"
-	spot "github.com/Jleagle/spotify-tools/spotify"
+	"github.com/Jleagle/spotifyhelper/session"
+	spot "github.com/Jleagle/spotifyhelper/spotify"
 )
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {

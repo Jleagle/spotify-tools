@@ -1,7 +1,7 @@
 - make cookie expire when auth token expires, save token into seperate session storage, everything else can be regular session cookie?
 - get details on login, Save username into session and show in header
 - Make the login page show why we need each permission
-- pagination on shuffle
+- get over 50 playlists on shuffle
 - add github info
 - make sure oauth errors are handled with propper error pages
 - only show shuffle buttons if it can be shuffled

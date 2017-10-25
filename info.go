@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/Jleagle/spotify-tools/session"
 	"net/http"
+
+	"github.com/Jleagle/spotifyhelper/session"
 )
 
 func infoHandler(w http.ResponseWriter, r *http.Request) {

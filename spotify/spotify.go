@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Jleagle/spotify-tools/session"
+	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2"
 )

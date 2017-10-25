@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Jleagle/spotify-tools/session"
+	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/go-chi/chi"
 	"github.com/zmb3/spotify"
 )
@@ -27,6 +27,7 @@ func main() {
 	r.Get("/", homeHandler)
 	r.Get("/login", loginHandler)
 	r.Get("/info", infoHandler)
+	r.Get("/duplicates", duplicatesHandler)
 	r.Get("/logout", logoutHandler)
 	r.Get("/login-callback", loginCallbackHandler)
 	r.Get("/shuffle", shuffleHandler)

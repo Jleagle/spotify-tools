@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/Jleagle/spotify-tools/session"
+	"github.com/Jleagle/spotifyhelper/session"
 )
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
