@@ -9,6 +9,7 @@ import (
 	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/spotifyhelper/session"
 	spot "github.com/Jleagle/spotifyhelper/spotify"
+	"github.com/Jleagle/spotifyhelper/structs"
 	"github.com/go-chi/chi"
 	"github.com/zmb3/spotify"
 )
@@ -17,26 +18,16 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, "/shuffle")
 
-	vars := templateVars{}
+	vars := structs.TemplateVars{}
 
 	if session.IsLoggedIn(r) {
 
-		client := spot.GetClient(r)
-		options := spot.GetOptions(r, 50, 0)
-
-		playlist, err := client.CurrentUsersPlaylistsOpt(options)
+		playlists, err := spot.CurrentUsersPlaylists(r)
 		if err != nil {
-			fmt.Println(err.Error())
+			returnTemplate(w, r, "error", structs.TemplateVars{}, err)
+			return
 		}
-
-		for k, v := range playlist.Playlists {
-			if v.Owner.DisplayName == "" {
-				playlist.Playlists[k].Owner.DisplayName = v.Owner.ID
-			}
-		}
-
-		// todo, sort playlists?
-		vars.Playlists = playlist.Playlists
+		vars.Playlists = playlists
 	}
 
 	returnTemplate(w, r, "shuffle", vars, nil)
@@ -66,7 +57,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get tracks
-	var trackChunks = int(math.Ceil(float64(playlist.Tracks.Total) / 100))
+	var trackChunks = int(math.Ceil(float64(playlist.Tracks.Total) / spot.TracksLimit))
 	var waitGroup sync.WaitGroup
 	var trackStrings = []string{}
 	messages := make(chan string, playlist.Tracks.Total)
@@ -77,7 +68,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 		go func(chunk int) {
 			defer waitGroup.Done()
 
-			options := spot.GetOptions(r, 100, chunk*100)
+			options := spot.GetOptions(r, spot.TracksLimit, chunk*spot.TracksLimit)
 			tracks, err := client.GetPlaylistTracksOpt(username, playlist.ID, options, "")
 			if err != nil {
 				fmt.Println("Getting tracks: " + err.Error())
@@ -133,8 +124,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Chunk (100 limit)
-	chunks := helpers.ArrayChunk(trackStrings, 100)
+	chunks := helpers.ArrayChunk(trackStrings, spot.TracksLimit)
 	for _, chunk := range chunks {
 
 		// Convert back to IDs

@@ -7,6 +7,7 @@ import (
 	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/spotifyhelper/session"
 	spot "github.com/Jleagle/spotifyhelper/spotify"
+	"github.com/Jleagle/spotifyhelper/structs"
 )
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +26,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	returnTemplate(w, r, "login", templateVars{}, nil)
+	returnTemplate(w, r, "login", structs.TemplateVars{}, nil)
 	return
 }
 
@@ -39,7 +40,7 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	queryErr := r.URL.Query().Get("error")
 	if queryErr != "" {
 
-		vars := templateVars{}
+		vars := structs.TemplateVars{}
 		vars.ErrorMessage = "Spotify: " + queryErr
 
 		returnTemplate(w, r, "error", vars, nil)
@@ -51,7 +52,7 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	tok, err := auth.Token(state, r)
 	if err != nil {
-		returnTemplate(w, r, "error", templateVars{}, err)
+		returnTemplate(w, r, "error", structs.TemplateVars{}, err)
 		return
 	}
 

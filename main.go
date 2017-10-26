@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/Jleagle/spotifyhelper/session"
+	"github.com/Jleagle/spotifyhelper/structs"
 	"github.com/go-chi/chi"
-	"github.com/zmb3/spotify"
 )
 
 func init() {
@@ -41,7 +41,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8084", r))
 }
 
-func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageData templateVars, err error) {
+func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageData structs.TemplateVars, err error) {
 
 	// todo, log errors
 
@@ -91,14 +91,4 @@ func fileServer(r chi.Router, path string, root http.FileSystem) {
 	r.Get(path, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fs.ServeHTTP(w, r)
 	}))
-}
-
-type templateVars struct {
-	LoggedIn     bool
-	LoggedInID   string
-	Flashes      []interface{}
-	ErrorCode    string
-	ErrorMessage string
-	Playlists    []spotify.SimplePlaylist // Shuffle
-	Highlight    string
 }

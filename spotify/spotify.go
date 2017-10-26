@@ -9,6 +9,11 @@ import (
 	"golang.org/x/oauth2"
 )
 
+const (
+	PlayslistsLimit = 50
+	TracksLimit     = 100
+)
+
 func GetAuthenticator() (auth spotify.Authenticator) {
 
 	scopes := []string{
@@ -50,4 +55,28 @@ func GetOptions(r *http.Request, limit int, offset int) (opt *spotify.Options) {
 	*opt.Offset = offset
 
 	return opt
+}
+
+// Loops through pagination to get every playlist
+func CurrentUsersPlaylists(r *http.Request) (playlists []spotify.SimplePlaylist, err error) {
+
+	client := GetClient(r)
+
+	var totalTracks = 1
+	var page = 0
+
+	for len(playlists) < totalTracks {
+
+		options := GetOptions(r, PlayslistsLimit, page*PlayslistsLimit)
+		response, err := client.CurrentUsersPlaylistsOpt(options)
+		if err != nil {
+			return playlists, err
+		}
+		totalTracks = response.Total
+		page++
+
+		playlists = append(playlists, response.Playlists...)
+	}
+
+	return playlists, err
 }

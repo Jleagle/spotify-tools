@@ -1,3 +1,2 @@
 - Make the login page show why we need each permission
-- get over 50 playlists on shuffle page
 - make sure oauth errors are handled with propper error pages
