@@ -71,7 +71,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 			options := spot.GetOptions(r, spot.TracksLimit, chunk*spot.TracksLimit)
 			tracks, err := client.GetPlaylistTracksOpt(username, playlist.ID, options, "")
 			if err != nil {
-				fmt.Println("Getting tracks: " + err.Error())
+				fmt.Println("Getting tracks to shuffle: " + err.Error())
 				//return
 			}
 
@@ -84,17 +84,28 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	waitGroup.Wait()
 	close(messages)
 
+	var invalidTracks int = 0
 	for message := range messages {
-		trackStrings = append(trackStrings, message)
+		if message == "" {
+			invalidTracks++
+		} else {
+			trackStrings = append(trackStrings, message)
+		}
 	}
 
-	if len(trackStrings) != playlist.Tracks.Total {
+	// Show message about invalid tracks
+	if invalidTracks > 0 {
+		session.SetFlash(w, r, fmt.Sprintf("%v %s", invalidTracks, " invalid tracks had to be removed"))
+	}
+
+	// Check we have as many tracks as we should
+	if len(trackStrings)+invalidTracks != playlist.Tracks.Total {
 		session.SetFlash(w, r, "Track count mismatch :(")
 		http.Redirect(w, r, "/shuffle?highlight="+playlistID, 302)
 		return
 	}
 
-	// Check tracks count
+	// Check playlist is worth shuffling
 	if len(trackStrings) < 2 {
 		session.SetFlash(w, r, "Playlist does not have enough track to shuffle.")
 		http.Redirect(w, r, "/shuffle?highlight="+playlistID, 302)
@@ -134,9 +145,16 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 			trackIds = append(trackIds, spotify.ID(v))
 		}
 
-		// Not in a go routine as that seemed to not always work..
-		client.AddTracksToPlaylist(username, playlist.ID, trackIds...)
+		waitGroup.Add(1)
+		func() {
+			defer waitGroup.Done()
+			_, err = client.AddTracksToPlaylist(username, playlist.ID, trackIds...)
+			if err != nil {
+				fmt.Println("Adding shuffled tracks back in: " + err.Error())
+			}
+		}()
 	}
+	waitGroup.Wait()
 
 	// Set flash
 	if createNew == "1" {
