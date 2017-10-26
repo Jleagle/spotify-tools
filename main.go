@@ -44,9 +44,11 @@ func main() {
 func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageData templateVars, err error) {
 
 	// todo, log errors
+
 	pageData.LoggedIn = session.IsLoggedIn(r)
 	pageData.Flashes = session.GetFlashes(w, r)
 	pageData.Highlight = r.URL.Query().Get("highlight")
+	pageData.LoggedInID = session.Read(r, session.UserID)
 
 	// Get current app path
 	_, file, _, ok := runtime.Caller(0)
@@ -93,6 +95,7 @@ func fileServer(r chi.Router, path string, root http.FileSystem) {
 
 type templateVars struct {
 	LoggedIn     bool
+	LoggedInID   string
 	Flashes      []interface{}
 	ErrorCode    string
 	ErrorMessage string

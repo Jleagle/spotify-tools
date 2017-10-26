@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Jleagle/go-helpers/helpers"
@@ -17,7 +18,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Query().Get("auth") == "1" {
 		state := helpers.RandomString(6, "abcdefghijklmnopqrstuvwxyz")
-		session.Write(w, r, session.State, state)
+		session.Write(w, r, session.AuthState, state)
 
 		auth := spot.GetAuthenticator()
 		http.Redirect(w, r, auth.AuthURL(state), 302)
@@ -46,7 +47,7 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	auth := spot.GetAuthenticator()
-	state := session.Read(r, session.State)
+	state := session.Read(r, session.AuthState)
 
 	tok, err := auth.Token(state, r)
 	if err != nil {
@@ -54,8 +55,17 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session.Write(w, r, session.State, "")
-	session.Write(w, r, session.Token, tok.AccessToken)
+	client := auth.NewClient(tok)
+	user, err := client.CurrentUser()
+	if err != nil {
+		fmt.Println("Getting user details: " + err.Error())
+	}
+
+	// todo, grab stuff from user, save to db?
+	session.Write(w, r, session.AuthState, "")
+	session.Write(w, r, session.AuthToken, tok.AccessToken)
+	session.Write(w, r, session.UserCountry, user.Country)
+	session.Write(w, r, session.UserID, user.ID)
 
 	postlogin(w, r)
 	return
@@ -73,9 +83,12 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	lastPage := session.Read(r, session.LastPage)
 
-	session.Write(w, r, session.Token, "")
-	session.Write(w, r, session.State, "")
+	// todo, do this in one call
+	session.Write(w, r, session.AuthToken, "")
+	session.Write(w, r, session.AuthState, "")
 	session.Write(w, r, session.LastPage, "")
+	session.Write(w, r, session.UserCountry, "")
+	session.Write(w, r, session.UserID, "")
 
 	session.SetFlash(w, r, "Logged Out!")
 

@@ -22,7 +22,7 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 	if session.IsLoggedIn(r) {
 
 		client := spot.GetClient(r)
-		options := spot.GetOptions(50, 0)
+		options := spot.GetOptions(r, 50, 0)
 
 		playlist, err := client.CurrentUsersPlaylistsOpt(options)
 		if err != nil {
@@ -77,7 +77,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 		go func(chunk int) {
 			defer waitGroup.Done()
 
-			options := spot.GetOptions(100, chunk*100)
+			options := spot.GetOptions(r, 100, chunk*100)
 			tracks, err := client.GetPlaylistTracksOpt(username, playlist.ID, options, "")
 			if err != nil {
 				fmt.Println("Getting tracks: " + err.Error())

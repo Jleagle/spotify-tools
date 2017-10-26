@@ -7,9 +7,11 @@ import (
 )
 
 const (
-	Token    = "token"     // Spotify access token
-	LastPage = "last-page" // The last page a user was on for page flow
-	State    = "state"     // For OAuth security
+	LastPage    = "last-page"
+	AuthToken   = "auth.token"
+	AuthState   = "auth.state"
+	UserCountry = "user.country"
+	UserID      = "user.id"
 )
 
 func getSession(r *http.Request) *sessions.Session {
@@ -75,5 +77,5 @@ func SetFlash(w http.ResponseWriter, r *http.Request, flash string) {
 }
 
 func IsLoggedIn(r *http.Request) bool {
-	return Read(r, Token) != ""
+	return Read(r, AuthToken) != ""
 }

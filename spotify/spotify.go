@@ -27,20 +27,25 @@ func GetAuthenticator() (auth spotify.Authenticator) {
 
 func GetClient(r *http.Request) (client spotify.Client) {
 
+	// todo, get these from cookie
 	token := &oauth2.Token{
-		AccessToken: session.Read(r, session.Token),
+		AccessToken: session.Read(r, session.AuthToken),
+		//TokenType:    "",
+		//RefreshToken: "",
+		//Expiry:       time.Now(),
 	}
 
 	return GetAuthenticator().NewClient(token)
 }
 
-func GetOptions(limit int, offset int) (opt *spotify.Options) {
+func GetOptions(r *http.Request, limit int, offset int) (opt *spotify.Options) {
 
 	opt = &spotify.Options{}
-
+	opt.Country = new(string)
 	opt.Limit = new(int)
 	opt.Offset = new(int)
 
+	*opt.Country = session.Read(r, session.UserCountry)
 	*opt.Limit = limit
 	*opt.Offset = offset
 
