@@ -143,9 +143,13 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 			trackIds = append(trackIds, spotify.ID(v))
 		}
 
-		//client.RemoveTracksFromPlaylist(username, playlist.ID, trackIds...)
-		client.AddTracksToPlaylist(username, playlist.ID, trackIds...)
+		waitGroup.Add(1)
+		go func() {
+			defer waitGroup.Done()
+			client.AddTracksToPlaylist(username, playlist.ID, trackIds...)
+		}()
 	}
+	waitGroup.Wait()
 
 	// Set flash
 	if createNew == "1" {
