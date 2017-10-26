@@ -48,7 +48,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	playlistID := chi.URLParam(r, "playlist")
 	createNew := chi.URLParam(r, "new")
 
-	username := "jleagle"
+	username := session.Read(r, session.UserID)
 
 	client := spot.GetClient(r)
 
