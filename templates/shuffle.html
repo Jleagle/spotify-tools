@@ -21,8 +21,13 @@
         <td>{{ .Owner.ID }}</td>
         <td>{{ .Tracks.Total }} tracks</td>
         <td>
+            {{ if gt .Tracks.Total 1 }}
             <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/1" role="button">New Playlist</a>
+            {{ if eq $.LoggedInID .Owner.ID }}
             <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/0" role="button">Shuffle Playlist</a>
+            {{ end }}
+            {{ end }}
+
         </td>
     </tr>
     {{ end }}
