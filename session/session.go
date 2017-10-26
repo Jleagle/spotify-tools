@@ -7,17 +7,20 @@ import (
 )
 
 const (
-	LastPage    = "last-page"
-	AuthToken   = "auth.token"
-	AuthState   = "auth.state"
-	UserCountry = "user.country"
-	UserID      = "user.id"
+	LastPage     = "last-page"
+	AuthState    = "auth.state"
+	UserCountry  = "user.country"
+	UserID       = "user.id"
+	TokenToken   = "token.token"
+	TokenType    = "token.type"
+	TokenRefresh = "token.refresh"
+	TokenExpiry  = "token.expiry"
 )
 
 func getSession(r *http.Request) *sessions.Session {
 
 	store := sessions.NewCookieStore([]byte("something-very-secret"))
-	session, err := store.Get(r, "hour")
+	session, err := store.Get(r, "spotify-tools-session")
 	if err != nil {
 		// todo, show error page
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -53,6 +56,30 @@ func Write(w http.ResponseWriter, r *http.Request, name string, value string) {
 	}
 }
 
+func WriteMany(w http.ResponseWriter, r *http.Request, values map[string]string) {
+
+	session := getSession(r)
+	for k, v := range values {
+		session.Values[k] = v
+	}
+
+	err := session.Save(r, w)
+	if err != nil {
+		// todo, show error page
+	}
+}
+
+func Clear(w http.ResponseWriter, r *http.Request) {
+
+	session := getSession(r)
+	session.Values = make(map[interface{}]interface{})
+
+	err := session.Save(r, w)
+	if err != nil {
+		// todo, show error page
+	}
+}
+
 func GetFlashes(w http.ResponseWriter, r *http.Request) []interface{} {
 
 	session := getSession(r)
@@ -77,5 +104,5 @@ func SetFlash(w http.ResponseWriter, r *http.Request, flash string) {
 }
 
 func IsLoggedIn(r *http.Request) bool {
-	return Read(r, AuthToken) != ""
+	return Read(r, TokenToken) != ""
 }

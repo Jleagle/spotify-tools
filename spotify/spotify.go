@@ -1,8 +1,11 @@
 package spotify
 
 import (
+	"fmt"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/zmb3/spotify"
@@ -32,12 +35,19 @@ func GetAuthenticator() (auth spotify.Authenticator) {
 
 func GetClient(r *http.Request) (client spotify.Client) {
 
+	expiry := session.Read(r, session.TokenExpiry)
+
+	i, err := strconv.ParseInt(expiry, 10, 64)
+	if err != nil {
+		fmt.Println("Converting expiry")
+	}
+
 	// todo, get these from cookie
 	token := &oauth2.Token{
-		AccessToken: session.Read(r, session.AuthToken),
-		//TokenType:    "",
-		//RefreshToken: "",
-		//Expiry:       time.Now(),
+		AccessToken:  session.Read(r, session.TokenToken),
+		TokenType:    session.Read(r, session.TokenType),
+		RefreshToken: session.Read(r, session.TokenRefresh),
+		Expiry:       time.Unix(int64(i), 0),
 	}
 
 	return GetAuthenticator().NewClient(token)

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/spotifyhelper/session"
@@ -63,10 +64,15 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// todo, grab stuff from user, save to db?
-	session.Write(w, r, session.AuthState, "")
-	session.Write(w, r, session.AuthToken, tok.AccessToken)
-	session.Write(w, r, session.UserCountry, user.Country)
-	session.Write(w, r, session.UserID, user.ID)
+	session.WriteMany(w, r, map[string]string{
+		session.AuthState:    "",
+		session.UserCountry:  user.Country,
+		session.UserID:       user.ID,
+		session.TokenToken:   tok.AccessToken,
+		session.TokenType:    tok.TokenType,
+		session.TokenRefresh: tok.RefreshToken,
+		session.TokenExpiry:  strconv.Itoa(int(tok.Expiry.Unix())),
+	})
 
 	postlogin(w, r)
 	return
@@ -84,13 +90,7 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	lastPage := session.Read(r, session.LastPage)
 
-	// todo, do this in one call
-	session.Write(w, r, session.AuthToken, "")
-	session.Write(w, r, session.AuthState, "")
-	session.Write(w, r, session.LastPage, "")
-	session.Write(w, r, session.UserCountry, "")
-	session.Write(w, r, session.UserID, "")
-
+	session.Clear(w, r)
 	session.SetFlash(w, r, "Logged Out!")
 
 	http.Redirect(w, r, lastPage, 302)
