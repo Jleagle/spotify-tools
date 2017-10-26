@@ -124,6 +124,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Chunk the tracks to be added back
 	chunks := helpers.ArrayChunk(trackStrings, spot.TracksLimit)
 	for _, chunk := range chunks {
 
@@ -133,13 +134,9 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 			trackIds = append(trackIds, spotify.ID(v))
 		}
 
-		waitGroup.Add(1)
-		go func() {
-			defer waitGroup.Done()
-			client.AddTracksToPlaylist(username, playlist.ID, trackIds...)
-		}()
+		// Not in a go routine as that seemed to not always work..
+		client.AddTracksToPlaylist(username, playlist.ID, trackIds...)
 	}
-	waitGroup.Wait()
 
 	// Set flash
 	if createNew == "1" {
