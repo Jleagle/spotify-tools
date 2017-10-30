@@ -11,7 +11,7 @@
         <th scope="col">Playlist</th>
         <th scope="col">Owner</th>
         <th scope="col">Tracks</th>
-        <th scope="col">Filter</th>
+        <th scope="col">Remove Duplicates</th>
     </tr>
     </thead>
     <tbody>
@@ -24,7 +24,7 @@
             {{ if gt .Tracks.Total 1 }}
             <a class="btn btn-primary btn-sm" href="/duplicates" role="button">New Playlist</a>
             {{ if eq $.LoggedInID .Owner.ID }}
-            <a class="btn btn-primary btn-sm" href="/duplicates" role="button">Remove Duplicates</a>
+            <a class="btn btn-primary btn-sm" href="/duplicates" role="button">Same Playlist</a>
             {{ end }}
             {{ end }}
         </td>

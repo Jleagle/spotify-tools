@@ -46,6 +46,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	// Get playlist
 	playlist, err := client.GetPlaylist(username, spotify.ID(playlistID))
 	if err != nil {
+
 		if err.Error() == "Not found." {
 			session.SetFlash(w, r, "Playlist not found in your account")
 		} else {
