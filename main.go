@@ -32,6 +32,8 @@ func main() {
 	r.Get("/login-callback", loginCallbackHandler)
 	r.Get("/shuffle", shuffleHandler)
 	r.Get("/shuffle/{playlist}/{new}", shuffleActionHandler)
+	r.Get("/random", randomHandler)
+	r.Get("/random/{type}", randomHandler)
 
 	// Assets
 	workDir, _ := os.Getwd()

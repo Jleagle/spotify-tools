@@ -1,0 +1,51 @@
+{{define "random"}} {{ template "header" .}}
+
+<h1>Random</h1>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="/random/tracks">Tracks</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/random/albums">Albums</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/random/artists">Artists</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/random/playlists">Playlists</a>
+    </li>
+</ul>
+
+{{ if .LoggedIn}}
+
+{{ if .SearchPlaylists}}
+{{ range $key, $value := .SearchPlaylists.Playlists.Playlists }}
+<div>{{ .Name }} by {{ .Owner.ID }}</div>
+{{ end }}
+{{end}}
+
+{{ if .SearchArtists}}
+{{ range $key, $value := .SearchArtists.Artists.Artists }}
+<div>{{ .Name }} by {{ .Name }}</div>
+{{ end }}
+{{end}}
+
+{{ if .SearchAlbums}}
+{{ range $key, $value := .SearchAlbums.Albums.Albums }}
+<div>{{ .ID }}</div>
+{{ end }}
+{{end}}
+
+{{ if .SearchTracks}}
+{{ range $key, $value := .SearchTracks.Tracks.Tracks }}
+<div>{{ .ID }}</div>
+{{ end }}
+{{end}}
+
+
+{{else}}
+    Logged Out
+{{end}}
+
+{{ template "footer" .}} {{end}}
