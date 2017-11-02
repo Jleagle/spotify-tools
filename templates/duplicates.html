@@ -22,9 +22,9 @@
         <td>{{ .Tracks.Total }} tracks</td>
         <td>
             {{ if gt .Tracks.Total 1 }}
-            <a class="btn btn-primary btn-sm" href="/duplicates" role="button">New Playlist</a>
+            <a class="btn btn-primary btn-sm" href="/duplicates/{{.ID}}/1" role="button">New Playlist</a>
             {{ if eq $.LoggedInID .Owner.ID }}
-            <a class="btn btn-primary btn-sm" href="/duplicates" role="button">Same Playlist</a>
+            <a class="btn btn-primary btn-sm" href="/duplicates/{{.ID}}/0" role="button">Same Playlist</a>
             {{ end }}
             {{ end }}
         </td>

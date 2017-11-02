@@ -27,3 +27,10 @@ func duplicatesHandler(w http.ResponseWriter, r *http.Request) {
 	returnTemplate(w, r, "duplicates", vars, nil)
 	return
 }
+
+func duplicatesActionHandler(w http.ResponseWriter, r *http.Request) {
+
+	//playlistID := chi.URLParam(r, "playlist")
+	//createNew := chi.URLParam(r, "new")
+
+}

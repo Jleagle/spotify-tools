@@ -22,7 +22,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		state := helpers.RandomString(6, "abcdefghijklmnopqrstuvwxyz")
 		session.Write(w, r, session.AuthState, state)
 
-		auth := spot.GetAuthenticator()
+		auth := spot.GetAuthenticator(r)
 		http.Redirect(w, r, auth.AuthURL(state), 302)
 		return
 	}
@@ -48,7 +48,7 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auth := spot.GetAuthenticator()
+	auth := spot.GetAuthenticator(r)
 	state := session.Read(r, session.AuthState)
 
 	tok, err := auth.Token(state, r)

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Jleagle/spotifyhelper/session"
@@ -17,7 +18,7 @@ const (
 	TracksLimit     = 100
 )
 
-func GetAuthenticator() (auth spotify.Authenticator) {
+func GetAuthenticator(r *http.Request) (auth spotify.Authenticator) {
 
 	scopes := []string{
 		spotify.ScopeUserReadEmail,
@@ -27,7 +28,13 @@ func GetAuthenticator() (auth spotify.Authenticator) {
 		spotify.ScopePlaylistModifyPublic,
 	}
 
-	auth = spotify.NewAuthenticator("http://localhost:8084"+"/login-callback", scopes...)
+	host := r.URL.Host
+	host = strings.Replace(host, ":80", "", 1)
+	if host == "" {
+		host = "localhost:8084"
+	}
+
+	auth = spotify.NewAuthenticator("http://"+host+"/login-callback", scopes...)
 	auth.SetAuthInfo(os.Getenv("SPOTIFY_CLIENT_ID"), os.Getenv("SPOTIFY_CLIENT_SECRET"))
 
 	return auth
@@ -42,7 +49,6 @@ func GetClient(r *http.Request) (client spotify.Client) {
 		fmt.Println("Converting expiry")
 	}
 
-	// todo, get these from cookie
 	token := &oauth2.Token{
 		AccessToken:  session.Read(r, session.TokenToken),
 		TokenType:    session.Read(r, session.TokenType),
@@ -50,7 +56,7 @@ func GetClient(r *http.Request) (client spotify.Client) {
 		Expiry:       time.Unix(int64(i), 0),
 	}
 
-	return GetAuthenticator().NewClient(token)
+	return GetAuthenticator(r).NewClient(token)
 }
 
 func GetOptions(r *http.Request, limit int, offset int) (opt *spotify.Options) {
@@ -89,4 +95,8 @@ func CurrentUsersPlaylists(r *http.Request) (playlists []spotify.SimplePlaylist,
 	}
 
 	return playlists, err
+}
+
+func GetPlaylistTracks(r *http.Request) {
+
 }

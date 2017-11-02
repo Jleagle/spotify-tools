@@ -25,15 +25,16 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Get("/", homeHandler)
-	r.Get("/login", loginHandler)
 	r.Get("/info", infoHandler)
-	r.Get("/duplicates", duplicatesHandler)
 	r.Get("/logout", logoutHandler)
+	r.Get("/login", loginHandler)
 	r.Get("/login-callback", loginCallbackHandler)
 	r.Get("/shuffle", shuffleHandler)
 	r.Get("/shuffle/{playlist}/{new}", shuffleActionHandler)
 	r.Get("/random", randomHandler)
 	r.Get("/random/{type}", randomHandler)
+	r.Get("/duplicates", duplicatesHandler)
+	r.Get("/duplicates/{playlist}/{new}", duplicatesActionHandler)
 
 	// Assets
 	workDir, _ := os.Getwd()
