@@ -39,6 +39,18 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/kr/pretty"
+  packages = ["."]
+  revision = "cfb55aafdaf3ec08f0db22699ab822c50091b1c4"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/kr/text"
+  packages = ["."]
+  revision = "7cafcd837844e784b526369c9bce262804aebc60"
+
+[[projects]]
+  branch = "master"
   name = "github.com/zmb3/spotify"
   packages = ["."]
   revision = "9832ad1cfcf12935e2c585242104695ad5e382a9"
@@ -64,6 +76,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "98e0d6cd16016364be3167c03d41eca8d2906a248ffda18ff2d4875d2621797b"
+  inputs-digest = "2cb888cc487e019299512c495cd9f558e6c0581ad7ea51ce564de6422fa93b38"
   solver-name = "gps-cdcl"
   solver-version = 1
