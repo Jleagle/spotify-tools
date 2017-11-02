@@ -18,16 +18,11 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.URL.Query().Get("auth") == "1" {
-		state := helpers.RandomString(6, "abcdefghijklmnopqrstuvwxyz")
-		session.Write(w, r, session.AuthState, state)
+	state := helpers.RandomString(6, "abcdefghijklmnopqrstuvwxyz")
+	session.Write(w, r, session.AuthState, state)
 
-		auth := spot.GetAuthenticator(r)
-		http.Redirect(w, r, auth.AuthURL(state), 302)
-		return
-	}
-
-	returnTemplate(w, r, "login", structs.TemplateVars{}, nil)
+	auth := spot.GetAuthenticator(r)
+	http.Redirect(w, r, auth.AuthURL(state), 302)
 	return
 }
 
@@ -63,7 +58,6 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Getting user details: " + err.Error())
 	}
 
-	// todo, grab stuff from user, save to db?
 	session.WriteMany(w, r, map[string]string{
 		session.AuthState:    "",
 		session.UserCountry:  user.Country,
