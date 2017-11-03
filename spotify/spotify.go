@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Jleagle/spotifyhelper/session"
@@ -27,7 +28,14 @@ func GetAuthenticator(r *http.Request) (auth spotify.Authenticator) {
 		spotify.ScopePlaylistModifyPublic,
 	}
 
-	auth = spotify.NewAuthenticator("http://"+r.Host+"/login-callback", scopes...)
+	host := r.Host
+	if strings.Contains(host, "8084") {
+		host = "http://" + host
+	} else {
+		host = "https://" + host
+	}
+
+	auth = spotify.NewAuthenticator(host+"/login-callback", scopes...)
 	auth.SetAuthInfo(os.Getenv("SPOTIFY_CLIENT_ID"), os.Getenv("SPOTIFY_CLIENT_SECRET"))
 
 	return auth
