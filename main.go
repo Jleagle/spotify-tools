@@ -61,9 +61,14 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 	folder := path.Dir(file)
 
 	// Load templates needed
-	always := []string{folder + "/templates/header.html", folder + "/templates/footer.html", folder + "/templates/" + page + ".html"}
+	always := []string{
+		folder + "/templates/header.html",
+		folder + "/templates/footer.html",
+		folder + "/templates/" + page + ".html",
+		//folder + "/templates/card.html",
+	}
 
-	t, err := template.New("t").ParseFiles(always...)
+	t, err := template.New("t").Funcs(getTemplateFuncMap()).ParseFiles(always...)
 	if err != nil {
 		//logger.ErrExit(err.Error())
 	}
@@ -72,6 +77,12 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 	err = t.ExecuteTemplate(w, page, pageData)
 	if err != nil {
 		//logger.ErrExit(err.Error())
+	}
+}
+
+func getTemplateFuncMap() map[string]interface{} {
+	return template.FuncMap{
+		"join": func(a []string) string { return strings.Join(a, ", ") },
 	}
 }
 

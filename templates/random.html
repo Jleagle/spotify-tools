@@ -2,50 +2,81 @@
 
 <h1>Random</h1>
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs mb-4">
     <li class="nav-item">
-        <a class="nav-link active" href="/random/tracks">Tracks</a>
+        <a class="nav-link {{ if .SearchArtists}}active{{end}}" href="/random/artists">Artists</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="/random/albums">Albums</a>
+        <a class="nav-link {{ if .SearchAlbums}}active{{end}}" href="/random/albums">Albums</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="/random/artists">Artists</a>
+        <a class="nav-link {{ if .SearchTracks}}active{{end}}" href="/random/tracks">Tracks</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="/random/playlists">Playlists</a>
+        <a class="nav-link {{ if .SearchPlaylists}}active{{end}}" href="/random/playlists">Playlists</a>
     </li>
 </ul>
 
 {{ if .LoggedIn}}
 
-{{ if .SearchPlaylists}}
-{{ range $key, $value := .SearchPlaylists.Playlists.Playlists }}
-<div>{{ .Name }} by {{ .Owner.ID }}</div>
-{{ end }}
-{{end}}
+<div class="row">
 
-{{ if .SearchArtists}}
-{{ range $key, $value := .SearchArtists.Artists.Artists }}
-<div>{{ .Name }} by {{ .Name }}</div>
-{{ end }}
-{{end}}
+    {{ if .SearchPlaylists}}
+    {{ range $key, $value := .SearchPlaylists.Playlists.Playlists }}
+    <div class="col-sm">
+        <div class="card">
+            <img class="card-img-top" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <a href="https://open.spotify.com/user/{{ .Owner.ID }}/playlist/{{ .ID }}">{{ .Name }}</a>
+                </h4>
+                <p class="card-text">
+                    By <a href="https://open.spotify.com/user/{{ .Owner.ID }}" target="_blank">{{ .Owner.ID }}</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    {{ end }}
+    {{end}}
 
-{{ if .SearchAlbums}}
-{{ range $key, $value := .SearchAlbums.Albums.Albums }}
-<div>{{ .ID }}</div>
-{{ end }}
-{{end}}
+    {{ if .SearchArtists}}
+    {{ range $key, $value := .SearchArtists.Artists.Artists }}
+    <div class="col-sm">
+        <div class="card">
+            {{if gt (len .Images) 0 }}
+            <img class="card-img-top" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
+            {{else}}
+            <img class="card-img-top" src="/assets/no-image.png" alt="{{ .Name }}">
+            {{end}}
+            <div class="card-body">
+                <h4 class="card-title">
+                    <a href="https://open.spotify.com/track/{{ .ID }}">{{ .Name }}</a>
+                </h4>
+                <p class="card-text">Popularity: {{ .Popularity }}</p>
+                <p class="card-text">Followers: {{ .Followers.Count }}</p>
+                <p class="card-text">Genres: {{ join .Genres }}</p>
+            </div>
+        </div>
+    </div>
+    {{ end }}
+    {{end}}
 
-{{ if .SearchTracks}}
-{{ range $key, $value := .SearchTracks.Tracks.Tracks }}
-<div>{{ .ID }}</div>
-{{ end }}
-{{end}}
+    {{ if .SearchAlbums}}
+    {{ range $key, $value := .SearchAlbums.Albums.Albums }}
+    <div>{{ .ID }}</div>
+    {{ end }}
+    {{end}}
 
+    {{ if .SearchTracks}}
+    {{ range $key, $value := .SearchTracks.Tracks.Tracks }}
+    <div>{{ .ID }}</div>
+    {{ end }}
+    {{end}}
+
+</div>
 
 {{else}}
-    Please login so we can access the Spotify database with your account
+Please login so we can access the Spotify database with your account
 {{end}}
 
 {{ template "footer" .}} {{end}}
