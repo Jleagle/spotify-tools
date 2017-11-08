@@ -17,26 +17,26 @@ func randomHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, "/random")
 
-	randomType := chi.URLParam(r, "type")
-
-	client := spot.GetClient(r)
-
 	vars := structs.TemplateVars{}
-
-	search := helpers.RandomString(1, "aeiou")
-	offset := rand.Intn(1000)
 
 	var err error
 
-	switch randomType {
-	case "albums":
-		vars.SearchAlbums, err = client.SearchOpt(search, spotify.SearchTypeAlbum, spot.GetOptions(r, 3, offset))
-	case "artists", "":
-		vars.SearchArtists, err = client.SearchOpt(search, spotify.SearchTypeArtist, spot.GetOptions(r, 3, offset))
-	case "playlists":
-		vars.SearchPlaylists, err = client.SearchOpt(search, spotify.SearchTypePlaylist, spot.GetOptions(r, 3, offset))
-	case "tracks":
-		vars.SearchTracks, err = client.SearchOpt(search, spotify.SearchTypeTrack, spot.GetOptions(r, 3, offset))
+	if session.IsLoggedIn(r) {
+
+		client := spot.GetClient(r)
+		search := helpers.RandomString(1, "aeiou")
+		offset := rand.Intn(1000)
+
+		switch chi.URLParam(r, "type") {
+		case "albums", "":
+			vars.SearchAlbums, err = client.SearchOpt(search, spotify.SearchTypeAlbum, spot.GetOptions(r, 3, offset))
+		case "artists":
+			vars.SearchArtists, err = client.SearchOpt(search, spotify.SearchTypeArtist, spot.GetOptions(r, 3, offset))
+		case "tracks":
+			vars.SearchTracks, err = client.SearchOpt(search, spotify.SearchTypeTrack, spot.GetOptions(r, 3, offset))
+		case "playlists":
+			vars.SearchPlaylists, err = client.SearchOpt(search, spotify.SearchTypePlaylist, spot.GetOptions(r, 3, offset))
+		}
 	}
 
 	if err != nil {

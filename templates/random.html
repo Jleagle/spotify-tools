@@ -4,10 +4,10 @@
 
 <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
-        <a class="nav-link {{ if .SearchArtists}}active{{end}}" href="/random/artists">Artists</a>
+        <a class="nav-link {{ if .SearchAlbums}}active{{end}}" href="/random/albums">Albums</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ if .SearchAlbums}}active{{end}}" href="/random/albums">Albums</a>
+        <a class="nav-link {{ if .SearchArtists}}active{{end}}" href="/random/artists">Artists</a>
     </li>
     <li class="nav-item">
         <a class="nav-link {{ if .SearchTracks}}active{{end}}" href="/random/tracks">Tracks</a>
@@ -52,7 +52,7 @@
                 <h4 class="card-title">
                     <a href="https://open.spotify.com/track/{{ .ID }}">{{ .Name }}</a>
                 </h4>
-                <p class="card-text">Popularity: {{ .Popularity }}</p>
+                <p class="card-text">Popularity: {{ .Popularity }}/100</p>
                 <p class="card-text">Followers: {{ .Followers.Count }}</p>
                 <p class="card-text">Genres: {{ join .Genres }}</p>
             </div>
@@ -63,13 +63,37 @@
 
     {{ if .SearchAlbums}}
     {{ range $key, $value := .SearchAlbums.Albums.Albums }}
-    <div>{{ .ID }}</div>
+    <div class="col-sm">
+        <div class="card">
+            <img class="card-img-top" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <a href="https://open.spotify.com/album/{{ .ID }}">{{ .Name }}</a>
+                </h4>
+                <p class="card-text">Type: {{.AlbumType}}</p>
+            </div>
+        </div>
+    </div>
     {{ end }}
     {{end}}
 
     {{ if .SearchTracks}}
     {{ range $key, $value := .SearchTracks.Tracks.Tracks }}
-    <div>{{ .ID }}</div>
+    <div class="col-sm">
+        <div class="card">
+
+            <div class="card-body">
+                <h4 class="card-title">
+                    <a href="https://open.spotify.com/track/{{ .ID }}">{{ .Name }}</a>
+                </h4>
+                <p class="card-text">Popularity: {{ .Popularity }}/100</p>
+                <p class="card-text">Album: <a href="https://open.spotify.com/album/{{ .ID }}">{{ .Name }}</a></p>
+                <p class="card-text">Preview: <a href="{{ .PreviewURL }}">{{ .Name }}</a></p>
+                <p class="card-text">Duration: {{ seconds .Duration }}</p>
+                <p class="card-text">Artists: {{ artists .Artists }}</p>
+            </div>
+        </div>
+    </div>
     {{ end }}
     {{end}}
 

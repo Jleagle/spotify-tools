@@ -1,2 +1,3 @@
 - make sure oauth errors are handled with propper error pages
 - Fix session key in source code
+- get a html5 mp3 player for track demos
