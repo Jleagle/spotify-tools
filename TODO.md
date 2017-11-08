@@ -1,3 +1,2 @@
 - make sure oauth errors are handled with propper error pages
-- get auth redirect to work live
-- Fix session key
+- Fix session key in source code
