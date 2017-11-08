@@ -14,4 +14,9 @@ type TemplateVars struct {
 	SearchArtists   *spotify.SearchResult // Random
 	SearchAlbums    *spotify.SearchResult // Random
 	SearchTracks    *spotify.SearchResult // Random
+	Track           *spotify.FullTrack
+	Album           *spotify.FullAlbum
+	Artist          *spotify.FullArtist
+	Playlist        *spotify.FullPlaylist
+	User            *spotify.User
 }

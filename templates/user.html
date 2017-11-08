@@ -1,0 +1,7 @@
+{{define "user"}} {{ template "header" .}}
+
+<h1>{{ .Name }}</h1>
+
+<a href="https://open.spotify.com/user/{{ .ID }}">{{ .Name }}</a>
+
+{{ template "footer" .}} {{end}}

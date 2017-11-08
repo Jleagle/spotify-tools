@@ -1,0 +1,11 @@
+{{define "artist"}} {{ template "header" .}}
+
+<a class="btn btn-success float-right" href="https://open.spotify.com/artist/{{ .Artist.ID }}">View on Spotify</a>
+
+<h1>{{ .Artist.Name }}</h1>
+
+<div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: {{ .Popularity }}%"></div>
+</div>
+
+{{ template "footer" .}} {{end}}

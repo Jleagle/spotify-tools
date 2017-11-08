@@ -17,8 +17,8 @@
     <tbody>
     {{ range $key, $value := .Playlists }}
     <tr class="{{if eq $.Highlight .ID}}table-primary{{end}}">
-        <td>{{ .Name }}</td>
-        <td>{{ .Owner.ID }}</td>
+        <td><a href="/user/{{ .Owner.ID }}/playlist/{{ .ID }}">{{ .Name }}</a></td>
+        <td><a href="/user/{{ .Owner.ID }}">{{ .Owner.ID }}</a></td>
         <td>{{ .Tracks.Total }} tracks</td>
         <td>
             {{ if gt .Tracks.Total 1 }}
@@ -27,15 +27,13 @@
             <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/0" role="button">Same Playlist</a>
             {{ end }}
             {{ end }}
-
         </td>
     </tr>
     {{ end }}
-
     </tbody>
 </table>
 {{else}}
-x
+Please login
 {{end}}
 
 {{ template "footer" .}} {{end}}

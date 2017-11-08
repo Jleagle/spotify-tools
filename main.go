@@ -38,6 +38,11 @@ func main() {
 	r.Get("/random/{type}", randomHandler)
 	r.Get("/duplicates", duplicatesHandler)
 	r.Get("/duplicates/{playlist}/{new}", duplicatesActionHandler)
+	r.Get("/artist/{artist}", artistHandler)
+	r.Get("/album/{album}", albumHandler)
+	r.Get("/track/{track}", trackHandler)
+	r.Get("/user/{user}", userHandler)
+	r.Get("/user/{user}/playlist/{playlist}", playlistHandler)
 
 	// Assets
 	workDir, _ := os.Getwd()
@@ -96,7 +101,7 @@ func getTemplateFuncMap() map[string]interface{} {
 		"seconds": func(inSeconds int) string {
 			minutes := inSeconds / 6000
 			seconds := inSeconds % 60
-			return fmt.Sprintf("v:v", minutes, seconds)
+			return fmt.Sprintf("%v:%v", minutes, seconds)
 		},
 	}
 }

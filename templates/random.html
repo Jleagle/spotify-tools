@@ -27,12 +27,8 @@
         <div class="card">
             <img class="card-img-top" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
             <div class="card-body">
-                <h4 class="card-title">
-                    <a href="https://open.spotify.com/user/{{ .Owner.ID }}/playlist/{{ .ID }}">{{ .Name }}</a>
-                </h4>
-                <p class="card-text">
-                    By <a href="https://open.spotify.com/user/{{ .Owner.ID }}" target="_blank">{{ .Owner.ID }}</a>
-                </p>
+                <h4 class="card-title"><a href="/user/{{ .Owner.ID }}/playlist/{{ .ID }}">{{ .Name }}</a></h4>
+                <p class="card-text">By <a href="/user/{{ .Owner.ID }}">{{ .Owner.ID }}</a></p>
             </div>
         </div>
     </div>
@@ -49,9 +45,7 @@
             <img class="card-img-top" src="/assets/no-image.png" alt="{{ .Name }}">
             {{end}}
             <div class="card-body">
-                <h4 class="card-title">
-                    <a href="https://open.spotify.com/track/{{ .ID }}">{{ .Name }}</a>
-                </h4>
+                <h4 class="card-title"><a href="/artist/{{ .ID }}">{{ .Name }}</a></h4>
                 <p class="card-text">Popularity: {{ .Popularity }}/100</p>
                 <p class="card-text">Followers: {{ .Followers.Count }}</p>
                 <p class="card-text">Genres: {{ join .Genres }}</p>
@@ -67,9 +61,7 @@
         <div class="card">
             <img class="card-img-top" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
             <div class="card-body">
-                <h4 class="card-title">
-                    <a href="https://open.spotify.com/album/{{ .ID }}">{{ .Name }}</a>
-                </h4>
+                <h4 class="card-title"><a href="/album/{{ .ID }}">{{ .Name }}</a></h4>
                 <p class="card-text">Type: {{.AlbumType}}</p>
             </div>
         </div>
@@ -81,13 +73,11 @@
     {{ range $key, $value := .SearchTracks.Tracks.Tracks }}
     <div class="col-sm">
         <div class="card">
-
+            <img class="card-img-top" src="{{(index .Album.Images 0).URL}}" alt="{{ .Name }}">
             <div class="card-body">
-                <h4 class="card-title">
-                    <a href="https://open.spotify.com/track/{{ .ID }}">{{ .Name }}</a>
-                </h4>
+                <h4 class="card-title"><a href="/track/{{ .ID }}">{{ .Name }}</a></h4>
                 <p class="card-text">Popularity: {{ .Popularity }}/100</p>
-                <p class="card-text">Album: <a href="https://open.spotify.com/album/{{ .ID }}">{{ .Name }}</a></p>
+                <p class="card-text">Album: <a href="/album/{{ .ID }}">{{ .Name }}</a></p>
                 <p class="card-text">Preview: <a href="{{ .PreviewURL }}">{{ .Name }}</a></p>
                 <p class="card-text">Duration: {{ seconds .Duration }}</p>
                 <p class="card-text">Artists: {{ artists .Artists }}</p>

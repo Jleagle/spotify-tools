@@ -13,6 +13,20 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
+
+<script src="/assets/></script>
+
+<script>
+    $('#mediaplayer').mediaelementplayer({
+        pluginPath: "/path/to/shims/",
+        // When using jQuery's `mediaelementplayer`, an `instance` argument
+        // is available in the `success` callback
+        success: function(mediaElement, originalNode, instance) {
+            // do things
+        }
+    });
+</script>
+
 </body>
 </html>
 
