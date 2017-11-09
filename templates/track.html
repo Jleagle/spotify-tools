@@ -1,11 +1,13 @@
 {{define "track"}} {{ template "header" .}}
 
-<a class="btn btn-success float-right" href="https://open.spotify.com/track/{{ .Track.ID }}">View on Spotify</a>
+<a class="btn btn-success float-right" target="_blank" href="https://open.spotify.com/track/{{ .Track.ID }}">View on Spotify</a>
 
 <h1>{{ .Track.Name }}</h1>
 
-<div class="progress">
-    <div class="progress-bar" role="progressbar" style="width: {{ .Popularity }}%"></div>
-</div>
+<audio controls class="mb-4" style="width:100%;">
+    <source src="{{.Track.PreviewURL}}" type="audio/mpeg">
+</audio>
+
+<p>Popularity: {{ .Track.Popularity }}</p>
 
 {{ template "footer" .}} {{end}}

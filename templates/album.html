@@ -1,6 +1,6 @@
 {{define "album"}} {{ template "header" .}}
 
-<a class="btn btn-success float-right" href="https://open.spotify.com/album/{{ .Album.ID }}">View on Spotify</a>
+<a class="btn btn-success float-right" target="_blank" href="https://open.spotify.com/album/{{ .Album.ID }}">View on Spotify</a>
 
 <h1>{{ .Album.Name }}</h1>
 

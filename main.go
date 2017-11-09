@@ -92,16 +92,17 @@ func getTemplateFuncMap() map[string]interface{} {
 	return template.FuncMap{
 		"join": func(a []string) string { return strings.Join(a, ", ") },
 		"artists": func(a []spotify.SimpleArtist) template.HTML {
-			artists := []string{}
+			var artists []string
 			for _, v := range a {
-				artists = append(artists, "<a href=\""+string(v.ID)+"\">"+v.Name+"</a>")
+				artists = append(artists, "<a href=\"/artist/"+string(v.ID)+"\">"+v.Name+"</a>")
 			}
 			return template.HTML(strings.Join(artists, ", "))
 		},
 		"seconds": func(inSeconds int) string {
-			minutes := inSeconds / 6000
+			inSeconds = inSeconds / 100
+			minutes := inSeconds / 60
 			seconds := inSeconds % 60
-			return fmt.Sprintf("%v:%v", minutes, seconds)
+			return fmt.Sprintf("%vm %vs", minutes, seconds)
 		},
 	}
 }

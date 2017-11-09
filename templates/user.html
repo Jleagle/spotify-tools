@@ -1,7 +1,7 @@
 {{define "user"}} {{ template "header" .}}
 
-<h1>{{ .Name }}</h1>
+<a class="btn btn-success float-right" target="_blank" href="https://open.spotify.com/user/{{ .User.ID }}">View on Spotify</a>
 
-<a href="https://open.spotify.com/user/{{ .ID }}">{{ .Name }}</a>
+<h1>{{ .User.Name }}</h1>
 
 {{ template "footer" .}} {{end}}

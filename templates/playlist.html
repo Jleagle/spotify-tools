@@ -1,6 +1,6 @@
 {{define "playlist"}} {{ template "header" .}}
 
-<a class="btn btn-success float-right" href="https://open.spotify.com/user/{{ .Playlist.Owner.ID }}/playlist/{{ .Playlist.ID }}">View on Spotify</a>
+<a class="btn btn-success float-right" target="_blank" href="https://open.spotify.com/user/{{ .Playlist.Owner.ID }}/playlist/{{ .Playlist.ID }}">View on Spotify</a>
 
 <h1>{{ .Playlist.Name }}</h1>
 

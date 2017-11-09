@@ -21,71 +21,82 @@
 
 <div class="row">
 
-    {{ if .SearchPlaylists}}
-    {{ range $key, $value := .SearchPlaylists.Playlists.Playlists }}
+{{ if .SearchPlaylists}}
+{{ range $key, $value := .SearchPlaylists.Playlists.Playlists }}
     <div class="col-sm">
         <div class="card">
-            <img class="card-img-top" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
+            <div class="card-header">Playlist</div>
+            <a href="/user/{{ .Owner.ID }}/playlist/{{ .ID }}">
+                <img style="width:100%" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
+            </a>
             <div class="card-body">
-                <h4 class="card-title"><a href="/user/{{ .Owner.ID }}/playlist/{{ .ID }}">{{ .Name }}</a></h4>
+                <h4 class="card-title">{{ .Name }}</h4>
                 <p class="card-text">By <a href="/user/{{ .Owner.ID }}">{{ .Owner.ID }}</a></p>
             </div>
         </div>
     </div>
-    {{ end }}
-    {{end}}
+{{ end }}
+{{end}}
 
-    {{ if .SearchArtists}}
-    {{ range $key, $value := .SearchArtists.Artists.Artists }}
+{{ if .SearchArtists}}
+{{ range $key, $value := .SearchArtists.Artists.Artists }}
     <div class="col-sm">
         <div class="card">
+            <div class="card-header">Artist</div>
+            <a href="/artist/{{ .ID }}">
             {{if gt (len .Images) 0 }}
-            <img class="card-img-top" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
+                <img style="width:100%" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
             {{else}}
-            <img class="card-img-top" src="/assets/no-image.png" alt="{{ .Name }}">
+                <img style="width:100%" src="/assets/no-image.png" alt="{{ .Name }}">
             {{end}}
+            </a>
             <div class="card-body">
-                <h4 class="card-title"><a href="/artist/{{ .ID }}">{{ .Name }}</a></h4>
+                <h4 class="card-title">{{ .Name }}</h4>
                 <p class="card-text">Popularity: {{ .Popularity }}/100</p>
                 <p class="card-text">Followers: {{ .Followers.Count }}</p>
                 <p class="card-text">Genres: {{ join .Genres }}</p>
             </div>
         </div>
     </div>
-    {{ end }}
-    {{end}}
+{{ end }}
+{{end}}
 
-    {{ if .SearchAlbums}}
-    {{ range $key, $value := .SearchAlbums.Albums.Albums }}
+{{ if .SearchAlbums}}
+{{ range $key, $value := .SearchAlbums.Albums.Albums }}
     <div class="col-sm">
         <div class="card">
-            <img class="card-img-top" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
+            <div class="card-header">Album</div>
+            <a href="/album/{{ .ID }}">
+                <img style="width:100%" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
+            </a>
             <div class="card-body">
-                <h4 class="card-title"><a href="/album/{{ .ID }}">{{ .Name }}</a></h4>
+                <h4 class="card-title">{{ .Name }}</h4>
                 <p class="card-text">Type: {{.AlbumType}}</p>
             </div>
         </div>
     </div>
-    {{ end }}
-    {{end}}
+{{ end }}
+{{end}}
 
-    {{ if .SearchTracks}}
-    {{ range $key, $value := .SearchTracks.Tracks.Tracks }}
+{{ if .SearchTracks}}
+{{ range $key, $value := .SearchTracks.Tracks.Tracks }}
     <div class="col-sm">
         <div class="card">
-            <img class="card-img-top" src="{{(index .Album.Images 0).URL}}" alt="{{ .Name }}">
+            <div class="card-header">Track</div>
+            <a href="/track/{{ .ID }}">
+                <img style="width:100%" src="{{(index .Album.Images 0).URL}}" alt="{{ .Name }}">
+            </a>
             <div class="card-body">
-                <h4 class="card-title"><a href="/track/{{ .ID }}">{{ .Name }}</a></h4>
-                <p class="card-text">Popularity: {{ .Popularity }}/100</p>
-                <p class="card-text">Album: <a href="/album/{{ .ID }}">{{ .Name }}</a></p>
-                <p class="card-text">Preview: <a href="{{ .PreviewURL }}">{{ .Name }}</a></p>
-                <p class="card-text">Duration: {{ seconds .Duration }}</p>
+                <h4 class="card-title">{{ .Name }}</h4>
                 <p class="card-text">Artists: {{ artists .Artists }}</p>
+                <p class="card-text">Album: <a href="/album/{{ .ID }}">{{ .Name }}</a></p>
+                <p class="card-text">Duration: {{ seconds .Duration }}</p>
+                <p class="card-text">Popularity: {{ .Popularity }}/100</p>
             </div>
         </div>
     </div>
-    {{ end }}
-    {{end}}
+{{ end }}
+{{end}}
 
 </div>
 
