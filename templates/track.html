@@ -4,10 +4,14 @@
 
 <h1>{{ .Track.Name }}</h1>
 
-<audio controls class="mb-4" style="width:100%;">
-    <source src="{{.Track.PreviewURL}}" type="audio/mpeg">
-</audio>
 
-<p>Popularity: {{ .Track.Popularity }}</p>
-
+<p>Artists: {{artists .Track.Artists}}</p>
+<p>Album: <a href="/album/{{.Track.Album.ID}}">{{.Track.Album.Name}}</a></p>
+<p>Popularity: {{ .Track.Popularity }}/100</p>
+<p>
+    <span style="float: left">Preview: </span>
+    <audio controls style="float: left">
+        <source src="{{.Track.PreviewURL}}" type="audio/mpeg">
+    </audio>
+</p>
 {{ template "footer" .}} {{end}}

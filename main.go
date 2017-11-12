@@ -90,7 +90,8 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 
 func getTemplateFuncMap() map[string]interface{} {
 	return template.FuncMap{
-		"join": func(a []string) string { return strings.Join(a, ", ") },
+		"join":  func(a []string) string { return strings.Join(a, ", ") },
+		"title": func(a string) string { return strings.Title(a) },
 		"artists": func(a []spotify.SimpleArtist) template.HTML {
 			var artists []string
 			for _, v := range a {
@@ -99,7 +100,7 @@ func getTemplateFuncMap() map[string]interface{} {
 			return template.HTML(strings.Join(artists, ", "))
 		},
 		"seconds": func(inSeconds int) string {
-			inSeconds = inSeconds / 100
+			inSeconds = inSeconds / 1000
 			minutes := inSeconds / 60
 			seconds := inSeconds % 60
 			return fmt.Sprintf("%vm %vs", minutes, seconds)

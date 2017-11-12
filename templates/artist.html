@@ -5,5 +5,27 @@
 <h1>{{ .Artist.Name }}</h1>
 
 <p>Popularity: {{ .Artist.Popularity }}</p>
+<p>Followers: {{ .Artist.Followers.Count }}</p>
+<p>Genres: {{ join .Artist.Genres }}</p>
+
+<h4>Top Tracks</h4>
+<table class="table table-hover table-sm">
+    <thead>
+    <tr>
+        <th scope="col">Track</th>
+        <th scope="col">Album</th>
+        <th scope="col">Duration</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ range $key, $value := .Tracks }}
+    <tr>
+        <td><a href="/track/{{.ID}}">{{.Name}}</a></td>
+        <td><a href="/album/{{.Album.ID}}">{{.Album.Name}}</a></td>
+        <td>{{seconds .Duration}}</td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
 
 {{ template "footer" .}} {{end}}

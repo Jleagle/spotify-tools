@@ -8,12 +8,13 @@ type TemplateVars struct {
 	Flashes         []interface{}
 	ErrorCode       string
 	ErrorMessage    string
-	Playlists       []spotify.SimplePlaylist // Shuffle
+	Playlists       []spotify.SimplePlaylist
 	Highlight       string
-	SearchPlaylists *spotify.SearchResult // Random
-	SearchArtists   *spotify.SearchResult // Random
-	SearchAlbums    *spotify.SearchResult // Random
-	SearchTracks    *spotify.SearchResult // Random
+	SearchPlaylists *spotify.SearchResult
+	SearchArtists   *spotify.SearchResult
+	SearchAlbums    *spotify.SearchResult
+	SearchTracks    *spotify.SearchResult
+	Tracks          []spotify.FullTrack
 	Track           *spotify.FullTrack
 	Album           *spotify.FullAlbum
 	Artist          *spotify.FullArtist

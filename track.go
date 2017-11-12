@@ -2,19 +2,18 @@ package main
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
 	"github.com/go-chi/chi"
-	"github.com/kr/pretty"
 	spot "github.com/zmb3/spotify"
 )
 
 func trackHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, r.URL.Path)
-	pretty.Print("Path:" + r.URL.Path)
 
 	client := spotify.GetClient(r)
 
@@ -29,30 +28,40 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 func albumHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, r.URL.Path)
-	pretty.Print("Path:" + r.URL.Path)
 
 	client := spotify.GetClient(r)
 
 	var err error
 	vars := structs.TemplateVars{}
 	vars.Album, err = client.GetAlbum(spot.ID(chi.URLParam(r, "album")))
+	vars.Album.AlbumType = strings.Title(vars.Album.AlbumType)
 
 	returnTemplate(w, r, "album", vars, err)
 	return
 }
 
 func artistHandler(w http.ResponseWriter, r *http.Request) {
+
 	session.Write(w, r, session.LastPage, r.URL.Path)
+
+	id := spot.ID(chi.URLParam(r, "artist"))
 
 	client := spotify.GetClient(r)
 
 	var err error
 	vars := structs.TemplateVars{}
-	vars.Artist, err = client.GetArtist(spot.ID(chi.URLParam(r, "artist")))
 
+	vars.Artist, err = client.GetArtist(id)
 	if err != nil {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find artist"
+		returnTemplate(w, r, "error", vars, err)
+	}
+
+	vars.Tracks, err = client.GetArtistsTopTracks(id, session.Read(r, session.UserCountry))
+	if err != nil {
+		vars.ErrorCode = "404"
+		vars.ErrorMessage = "Can't find artists top tracks"
 		returnTemplate(w, r, "error", vars, err)
 	}
 
@@ -63,7 +72,6 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 func playlistHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, r.URL.Path)
-	pretty.Print("Path:" + r.URL.Path)
 
 	client := spotify.GetClient(r)
 
@@ -78,7 +86,6 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
 func userHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, r.URL.Path)
-	pretty.Print("Path:" + r.URL.Path)
 
 	client := spotify.GetClient(r)
 
