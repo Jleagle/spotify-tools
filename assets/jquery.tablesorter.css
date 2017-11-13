@@ -1,0 +1,8 @@
+table.tablesorter .tablesorter-header {
+    cursor: pointer;
+}
+
+table.tablesorter .tablesorter-headerAsc,
+table.tablesorter .tablesorter-headerDesc{
+    color: #28a745;
+}

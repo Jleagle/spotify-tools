@@ -17,6 +17,7 @@ const (
 	PlayslistsLimit = 50
 	TracksLimit     = 100
 	MaxSearchOffset = 100000
+	MaxArtistAlbums = 50
 )
 
 func GetAuthenticator(r *http.Request) (auth spotify.Authenticator) {

@@ -4,7 +4,7 @@
 
 <h1>{{ .Artist.Name }}</h1>
 
-<p>Popularity: {{ .Artist.Popularity }}</p>
+<p>Popularity: {{ .Artist.Popularity }}/100</p>
 <p>Followers: {{ .Artist.Followers.Count }}</p>
 <p>Genres: {{ join .Artist.Genres }}</p>
 
@@ -27,5 +27,12 @@
     {{ end }}
     </tbody>
 </table>
+
+<h4>Albums</h4>
+<div class="row">
+{{ range $key, $value := .Albums.Albums }}
+    {{ template "include-album" . }}
+{{ end }}
+</div>
 
 {{ template "footer" .}} {{end}}

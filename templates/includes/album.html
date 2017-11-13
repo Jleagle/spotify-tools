@@ -1,0 +1,15 @@
+{{define "include-album"}}
+
+<div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 mb-4">
+    <div class="card">
+        <div class="card-header">{{title .AlbumType}}</div>
+        <a href="/album/{{ .ID }}">
+            <img style="width:100%" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
+        </a>
+        <div class="card-body">
+            <h4 class="card-title">{{ .Name }}</h4>
+        </div>
+    </div>
+</div>
+
+{{end}}

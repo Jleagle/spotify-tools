@@ -3,5 +3,30 @@
 <a class="btn btn-success float-right" target="_blank" href="https://open.spotify.com/user/{{ .Playlist.Owner.ID }}/playlist/{{ .Playlist.ID }}">View on Spotify</a>
 
 <h1>{{ .Playlist.Name }}</h1>
+<p>Owner: <a href="/user/{{ .Playlist.Owner.ID }}">{{ .Playlist.Owner.ID }}</a></p>
+<p>Collaborative: {{bool .Playlist.Collaborative}}</p>
+
+<table class="table table-hover table-sm" id="table-playlist">
+    <thead>
+    <tr>
+        <th scope="col">Track</th>
+        <th scope="col">Album</th>
+        <th scope="col">Artists</th>
+        <th scope="col">Popularity</th>
+        <th scope="col">Duration</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ range $key, $value := .Playlist.Tracks.Tracks }}
+    <tr>
+        <td><a href="/track/{{ .Track.ID }}">{{ .Track.Name }}</a></td>
+        <td><a href="/album/{{ .Track.Album.ID }}">{{ .Track.Album.Name }}</a></td>
+        <td>{{artists .Track.Artists}}</td>
+        <td>{{ .Track.Popularity }}/100</td>
+        <td>{{ seconds .Track.Duration }}</td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
 
 {{ template "footer" .}} {{end}}

@@ -23,7 +23,7 @@
 
 {{ if .SearchPlaylists}}
 {{ range $key, $value := .SearchPlaylists.Playlists.Playlists }}
-    <div class="col-sm">
+    <div class="col-4">
         <div class="card">
             <div class="card-header">Playlist</div>
             <a href="/user/{{ .Owner.ID }}/playlist/{{ .ID }}">
@@ -40,7 +40,7 @@
 
 {{ if .SearchArtists}}
 {{ range $key, $value := .SearchArtists.Artists.Artists }}
-    <div class="col-sm">
+    <div class="col-4">
         <div class="card">
             <div class="card-header">Artist</div>
             <a href="/artist/{{ .ID }}">
@@ -63,24 +63,13 @@
 
 {{ if .SearchAlbums}}
 {{ range $key, $value := .SearchAlbums.Albums.Albums }}
-    <div class="col-sm">
-        <div class="card">
-            <div class="card-header">Album</div>
-            <a href="/album/{{ .ID }}">
-                <img style="width:100%" src="{{(index .Images 0).URL}}" alt="{{ .Name }}">
-            </a>
-            <div class="card-body">
-                <h4 class="card-title">{{ .Name }}</h4>
-                <p class="card-text">Type: {{title .AlbumType}}</p>
-            </div>
-        </div>
-    </div>
+    {{ template "include-album" . }}
 {{ end }}
 {{end}}
 
 {{ if .SearchTracks}}
 {{ range $key, $value := .SearchTracks.Tracks.Tracks }}
-    <div class="col-sm">
+    <div class="col-4">
         <div class="card">
             <div class="card-header">Track</div>
             <a href="/track/{{ .ID }}">

@@ -65,6 +65,13 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		returnTemplate(w, r, "error", vars, err)
 	}
 
+	vars.Albums, err = client.GetArtistAlbumsOpt(id, spotify.GetOptions(r, spotify.MaxArtistAlbums, 0), nil)
+	if err != nil {
+		vars.ErrorCode = "404"
+		vars.ErrorMessage = "Can't find artists albums"
+		returnTemplate(w, r, "error", vars, err)
+	}
+
 	returnTemplate(w, r, "artist", vars, err)
 	return
 }

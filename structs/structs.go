@@ -14,9 +14,10 @@ type TemplateVars struct {
 	SearchArtists   *spotify.SearchResult
 	SearchAlbums    *spotify.SearchResult
 	SearchTracks    *spotify.SearchResult
-	Tracks          []spotify.FullTrack
 	Track           *spotify.FullTrack
+	Tracks          []spotify.FullTrack
 	Album           *spotify.FullAlbum
+	Albums          *spotify.SimpleAlbumPage
 	Artist          *spotify.FullArtist
 	Playlist        *spotify.FullPlaylist
 	User            *spotify.User

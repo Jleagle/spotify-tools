@@ -73,7 +73,7 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 		folder + "/templates/header.html",
 		folder + "/templates/footer.html",
 		folder + "/templates/" + page + ".html",
-		//folder + "/templates/card.html",
+		folder + "/templates/includes/album.html",
 	}
 
 	t, err := template.New("t").Funcs(getTemplateFuncMap()).ParseFiles(always...)
@@ -92,6 +92,13 @@ func getTemplateFuncMap() map[string]interface{} {
 	return template.FuncMap{
 		"join":  func(a []string) string { return strings.Join(a, ", ") },
 		"title": func(a string) string { return strings.Title(a) },
+		"bool": func(a bool) string {
+			if a == true {
+				return "Yes"
+			} else {
+				return "No"
+			}
+		},
 		"artists": func(a []spotify.SimpleArtist) template.HTML {
 			var artists []string
 			for _, v := range a {
