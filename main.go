@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"math/rand"
@@ -12,10 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"fmt"
-
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/Jleagle/spotifyhelper/structs"
+	"github.com/dustin/go-humanize"
 	"github.com/go-chi/chi"
 	"github.com/zmb3/spotify"
 )
@@ -92,6 +92,7 @@ func getTemplateFuncMap() map[string]interface{} {
 	return template.FuncMap{
 		"join":  func(a []string) string { return strings.Join(a, ", ") },
 		"title": func(a string) string { return strings.Title(a) },
+		"comma": func(a uint) string { return humanize.Comma(int64(a)) },
 		"bool": func(a bool) string {
 			if a == true {
 				return "Yes"
@@ -105,6 +106,13 @@ func getTemplateFuncMap() map[string]interface{} {
 				artists = append(artists, "<a href=\"/artist/"+string(v.ID)+"\">"+v.Name+"</a>")
 			}
 			return template.HTML(strings.Join(artists, ", "))
+		},
+		"genres": func(a []string) string {
+			var genres []string
+			for _, v := range a {
+				genres = append(genres, strings.Title(v))
+			}
+			return strings.Join(genres, ", ")
 		},
 		"seconds": func(inSeconds int) string {
 			inSeconds = inSeconds / 1000

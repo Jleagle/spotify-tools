@@ -21,4 +21,5 @@ type TemplateVars struct {
 	Artist          *spotify.FullArtist
 	Playlist        *spotify.FullPlaylist
 	User            *spotify.User
+	UserPlaylists   *spotify.SimplePlaylistPage
 }

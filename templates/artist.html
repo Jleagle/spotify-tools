@@ -4,9 +4,9 @@
 
 <h1>{{ .Artist.Name }}</h1>
 
-<p>Popularity: {{ .Artist.Popularity }}/100</p>
-<p>Followers: {{ .Artist.Followers.Count }}</p>
-<p>Genres: {{ join .Artist.Genres }}</p>
+<p><strong>Popularity:</strong> {{ .Artist.Popularity }}/100</p>
+<p><strong>Followers:</strong> {{ comma .Artist.Followers.Count }}</p>
+<p><strong>Genres:</strong> {{ genres .Artist.Genres }}</p>
 
 <h4>Top Tracks</h4>
 <table class="table table-hover table-sm">

@@ -2,6 +2,26 @@
 
 <a class="btn btn-success float-right" target="_blank" href="https://open.spotify.com/user/{{ .User.ID }}">View on Spotify</a>
 
-<h1>{{ .User.Name }}</h1>
+<h1><img src="{{(index .User.Images 0).URL}}" alt="{{ .User.DisplayName }}" style="height: 50px;"> {{ .User.DisplayName }}</h1>
+<p>
+    <strong>Followers: </strong>{{comma .User.Followers.Count }}<br />
+</p>
+
+<table class="table table-hover table-sm">
+    <thead>
+    <tr>
+        <th scope="col">Playlist</th>
+        <th scope="col">Tracks</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ range $key, $value := .UserPlaylists.Playlists }}
+    <tr>
+        <td><a href="/user/{{ .Owner.ID }}/playlist/{{ .ID }}">{{ .Name }}</a></td>
+        <td>{{ .Tracks.Total }} tracks</td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
 
 {{ template "footer" .}} {{end}}

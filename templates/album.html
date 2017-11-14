@@ -3,13 +3,12 @@
 <a class="btn btn-success float-right" target="_blank" href="https://open.spotify.com/album/{{ .Album.ID }}">View on Spotify</a>
 
 <h1>{{ .Album.Name }}</h1>
-<p>Album Type: {{ .Album.AlbumType }}</p>
 <p>Artists: {{ artists .Album.Artists }}</p>
 
 <table class="table table-hover table-sm">
     <thead>
     <tr>
-        <th scope="col">Disc/Track</th>
+        <th scope="col">Track</th>
         <th scope="col">Artists</th>
         <th scope="col">Title</th>
         <th scope="col">Duration</th>

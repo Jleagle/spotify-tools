@@ -31,7 +31,9 @@
             </a>
             <div class="card-body">
                 <h4 class="card-title">{{ .Name }}</h4>
-                <p class="card-text">By <a href="/user/{{ .Owner.ID }}">{{ .Owner.ID }}</a></p>
+                <p class="card-text">
+                    <strong>By:</strong> <a href="/user/{{ .Owner.ID }}">{{ .Owner.ID }}</a>
+                </p>
             </div>
         </div>
     </div>
@@ -52,9 +54,11 @@
             </a>
             <div class="card-body">
                 <h4 class="card-title">{{ .Name }}</h4>
-                <p class="card-text">Popularity: {{ .Popularity }}/100</p>
-                <p class="card-text">Followers: {{ .Followers.Count }}</p>
-                <p class="card-text">Genres: {{ join .Genres }}</p>
+                <p class="card-text">
+                    <strong>Popularity:</strong> {{ .Popularity }}/100<br />
+                    <strong>Followers:</strong> {{ comma .Followers.Count }}<br />
+                    <strong>Genres:</strong> {{ genres .Genres }}
+                </p>
             </div>
         </div>
     </div>
@@ -77,10 +81,12 @@
             </a>
             <div class="card-body">
                 <h4 class="card-title">{{ .Name }}</h4>
-                <p class="card-text">Artists: {{ artists .Artists }}</p>
-                <p class="card-text">Album: <a href="/album/{{ .ID }}">{{ .Name }}</a></p>
-                <p class="card-text">Duration: {{ seconds .Duration }}</p>
-                <p class="card-text">Popularity: {{ .Popularity }}/100</p>
+                <p class="card-text">
+                    <strong>Artists:</strong> {{ artists .Artists }}<br/>
+                    <strong>Album:</strong> <a href="/album/{{ .ID }}">{{ .Name }}</a><br/>
+                    <strong>Duration:</strong> {{ seconds .Duration }}<br/>
+                    <strong>Popularity:</strong> {{ .Popularity }}/100
+                </p>
             </div>
         </div>
     </div>
