@@ -82,10 +82,8 @@ func postlogin(w http.ResponseWriter, r *http.Request) {
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 
-	lastPage := session.Read(r, session.LastPage)
-
 	session.Clear(w, r)
 	session.SetFlash(w, r, "Logged Out!")
 
-	http.Redirect(w, r, lastPage, 302)
+	http.Redirect(w, r, "/", 302)
 }

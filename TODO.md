@@ -1,4 +1,4 @@
 - make sure oauth errors are handled with propper error pages
 - Fix session key in source code
-- add albums to artist page
-- Change shuffle bool toggle to query string 
+- Change shuffle bool toggle to query string
+- Get all albums on an artist, only 50 currently

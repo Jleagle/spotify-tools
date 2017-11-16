@@ -28,7 +28,6 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Get("/", homeHandler)
-	r.Get("/info", infoHandler)
 	r.Get("/logout", logoutHandler)
 	r.Get("/login", loginHandler)
 	r.Get("/login-callback", loginCallbackHandler)
@@ -86,6 +85,14 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 	if err != nil {
 		//logger.ErrExit(err.Error())
 	}
+}
+
+func returnLoggedOutTemplate(w http.ResponseWriter, r *http.Request, err error) {
+
+	vars := structs.TemplateVars{}
+	vars.ErrorMessage = "Please login"
+
+	returnTemplate(w, r, "error", vars, err)
 }
 
 func getTemplateFuncMap() map[string]interface{} {

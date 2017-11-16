@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <meta name="google" content="notranslate" />
+    <meta name="google" content="notranslate"/>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
@@ -25,19 +25,20 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+            {{if .LoggedIn}}
                 <li class="nav-item"><a class="nav-link" href="/shuffle">Shuffle</a></li>
                 <li class="nav-item"><a class="nav-link" href="/duplicates">Duplicates</a></li>
                 <li class="nav-item"><a class="nav-link" href="/random">Random</a></li>
+            {{end}}
             </ul>
 
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="/info">Info</a></li>
                 <li class="nav-item">
-                    {{if .LoggedIn}}
+                {{if .LoggedIn}}
                     <a class="nav-link" href="/logout">Logout {{.LoggedInID}}</a>
-                    {{else}}
+                {{else}}
                     <a class="nav-link" href="/login">Login</a>
-                    {{end}}
+                {{end}}
                 </li>
             </ul>
         </div>
@@ -46,12 +47,12 @@
 
 <div class="container">
 
-    {{if .Flashes}}
+{{if .Flashes}}
     <div class="alert alert-primary" role="alert">
-        {{ range $key, $value := .Flashes }}
+    {{ range $key, $value := .Flashes }}
         <div>{{ $value }}</div>
-        {{ end }}
+    {{ end }}
     </div>
-    {{end}}
+{{end}}
 
-    {{end}}
+{{end}}

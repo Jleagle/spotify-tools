@@ -8,6 +8,12 @@
   revision = "4f0a1af16dc317bafde0b73c3d1cc0193feb0078"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/dustin/go-humanize"
+  packages = ["."]
+  revision = "bb3d318650d48840a39aa21a027c6630e198e626"
+
+[[projects]]
   name = "github.com/go-chi/chi"
   packages = ["."]
   revision = "f7c66f685bcab06bcce78ac212c5f3553c063d19"
@@ -76,6 +82,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2cb888cc487e019299512c495cd9f558e6c0581ad7ea51ce564de6422fa93b38"
+  inputs-digest = "87e3dcb922ad477904ebde60031abe7f7fcf8168d920caf684c592f4d14d8622"
   solver-name = "gps-cdcl"
   solver-version = 1

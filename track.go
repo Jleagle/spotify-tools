@@ -15,6 +15,11 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, r.URL.Path)
 
+	if !session.IsLoggedIn(r) {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
+
 	client := spotify.GetClient(r)
 
 	var err error
@@ -34,6 +39,11 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 func albumHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, r.URL.Path)
+
+	if !session.IsLoggedIn(r) {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
 
 	client := spotify.GetClient(r)
 
@@ -55,6 +65,11 @@ func albumHandler(w http.ResponseWriter, r *http.Request) {
 func artistHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, r.URL.Path)
+
+	if !session.IsLoggedIn(r) {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
 
 	id := spot.ID(chi.URLParam(r, "artist"))
 
@@ -92,6 +107,11 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, r.URL.Path)
 
+	if !session.IsLoggedIn(r) {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
+
 	client := spotify.GetClient(r)
 
 	var err error
@@ -111,6 +131,11 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
 func userHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, r.URL.Path)
+
+	if !session.IsLoggedIn(r) {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
 
 	id := chi.URLParam(r, "user")
 

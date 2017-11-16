@@ -12,16 +12,18 @@ func duplicatesHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, "/duplicates")
 
+	if !session.IsLoggedIn(r) {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
+
+	var err error
 	vars := structs.TemplateVars{}
 
-	if session.IsLoggedIn(r) {
-
-		playlists, err := spot.CurrentUsersPlaylists(r)
-		if err != nil {
-			returnTemplate(w, r, "error", structs.TemplateVars{}, err)
-			return
-		}
-		vars.Playlists = playlists
+	vars.Playlists, err = spot.CurrentUsersPlaylists(r)
+	if err != nil {
+		returnTemplate(w, r, "error", structs.TemplateVars{}, err)
+		return
 	}
 
 	returnTemplate(w, r, "duplicates", vars, nil)
@@ -29,6 +31,11 @@ func duplicatesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func duplicatesActionHandler(w http.ResponseWriter, r *http.Request) {
+
+	if !session.IsLoggedIn(r) {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
 
 	//playlistID := chi.URLParam(r, "playlist")
 	//createNew := chi.URLParam(r, "new")

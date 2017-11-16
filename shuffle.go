@@ -18,16 +18,18 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.Write(w, r, session.LastPage, "/shuffle")
 
+	if !session.IsLoggedIn(r) {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
+
+	var err error
 	vars := structs.TemplateVars{}
 
-	if session.IsLoggedIn(r) {
-
-		playlists, err := spot.CurrentUsersPlaylists(r)
-		if err != nil {
-			returnTemplate(w, r, "error", structs.TemplateVars{}, err)
-			return
-		}
-		vars.Playlists = playlists
+	vars.Playlists, err = spot.CurrentUsersPlaylists(r)
+	if err != nil {
+		returnTemplate(w, r, "error", structs.TemplateVars{}, err)
+		return
 	}
 
 	returnTemplate(w, r, "shuffle", vars, nil)
@@ -35,6 +37,11 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
+
+	if !session.IsLoggedIn(r) {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
 
 	playlistID := chi.URLParam(r, "playlist")
 	createNew := chi.URLParam(r, "new")
