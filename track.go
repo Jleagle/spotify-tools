@@ -53,7 +53,7 @@ func albumHandler(w http.ResponseWriter, r *http.Request) {
 	vars.Album, err = client.GetAlbum(spot.ID(chi.URLParam(r, "album")))
 	if err != nil {
 		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find album"
+		vars.ErrorMessage = err.Error() //todo, copy this to other places
 		returnTemplate(w, r, "error", vars, err)
 	}
 	vars.Album.AlbumType = strings.Title(vars.Album.AlbumType)

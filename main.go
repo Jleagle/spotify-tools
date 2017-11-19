@@ -32,6 +32,7 @@ func main() {
 	r.Get("/login", loginHandler)
 	r.Get("/login-callback", loginCallbackHandler)
 	r.Get("/shuffle", shuffleHandler)
+	r.Get("/unpopular", unpopularHandler)
 	r.Get("/shuffle/{playlist}/{new}", shuffleActionHandler)
 	r.Get("/random", randomHandler)
 	r.Get("/random/{type}", randomHandler)

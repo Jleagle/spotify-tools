@@ -1,0 +1,11 @@
+{{define "unpopular"}} {{ template "header" .}}
+
+<h1>Unpopular</h1>
+
+{{ if .SearchAlbums}}
+{{ range $key, $value := .SearchAlbums.Albums.Albums }}
+    {{ template "include-album" . }}
+{{ end }}
+{{end}}
+
+{{ template "footer" .}} {{end}}

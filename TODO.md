@@ -1,4 +1,11 @@
 - make sure oauth errors are handled with propper error pages
 - Fix session key in source code
-- Change shuffle bool toggle to query string
+- Change shuffle bool toggle to query string 
 - Get all albums on an artist, only 50 currently
+- add sitemap
+- test shuffleing local tracks
+- create playlist from lastfm, youtube
+- add a search filter on lists
+- list and link all genres?
+- list the users top artists/tracks etc
+- get more data on track page - https://developer.spotify.com/web-api/get-audio-analysis/
