@@ -24,7 +24,7 @@ func GetAuthenticator(r *http.Request) (auth spotify.Authenticator) {
 
 	scopes := []string{
 		spotify.ScopeUserReadEmail,
-		spotify.ScopeUserReadPrivate,
+		spotify.ScopeUserReadPrivate, // Need for country
 		spotify.ScopePlaylistReadPrivate,
 		spotify.ScopePlaylistReadCollaborative,
 		spotify.ScopePlaylistModifyPublic,

@@ -22,4 +22,6 @@ type TemplateVars struct {
 	Playlist        *spotify.FullPlaylist
 	User            *spotify.User
 	UserPlaylists   *spotify.SimplePlaylistPage
+	AudioAnalysis   *spotify.AudioAnalysis
+	AudioFeatures   []*spotify.AudioFeatures
 }

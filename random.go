@@ -28,16 +28,17 @@ func randomHandler(w http.ResponseWriter, r *http.Request) {
 	client := spot.GetClient(r)
 	search := helpers.RandomString(1, "aeiou")
 	offset := rand.Intn(1000)
+	options := spot.GetOptions(r, 3, offset)
 
 	switch chi.URLParam(r, "type") {
 	case "albums", "":
-		vars.SearchAlbums, err = client.SearchOpt(search, spotify.SearchTypeAlbum, spot.GetOptions(r, 3, offset))
+		vars.SearchAlbums, err = client.SearchOpt(search, spotify.SearchTypeAlbum, options)
 	case "artists":
-		vars.SearchArtists, err = client.SearchOpt(search, spotify.SearchTypeArtist, spot.GetOptions(r, 3, offset))
+		vars.SearchArtists, err = client.SearchOpt(search, spotify.SearchTypeArtist, options)
 	case "tracks":
-		vars.SearchTracks, err = client.SearchOpt(search, spotify.SearchTypeTrack, spot.GetOptions(r, 3, offset))
+		vars.SearchTracks, err = client.SearchOpt(search, spotify.SearchTypeTrack, options)
 	case "playlists":
-		vars.SearchPlaylists, err = client.SearchOpt(search, spotify.SearchTypePlaylist, spot.GetOptions(r, 3, offset))
+		vars.SearchPlaylists, err = client.SearchOpt(search, spotify.SearchTypePlaylist, options)
 	}
 
 	if err != nil {
