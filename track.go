@@ -33,19 +33,13 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 		returnTemplate(w, r, "error", vars, err)
 	}
 
-	vars.AudioAnalysis, err = client.GetAudioAnalysis(trackID)
-	if err != nil {
-		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find audio analysis"
-		returnTemplate(w, r, "error", vars, err)
-	}
-
-	vars.AudioFeatures, err = client.GetAudioFeatures(trackID)
+	audioFeats, err := client.GetAudioFeatures(trackID)
 	if err != nil {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find audio features"
 		returnTemplate(w, r, "error", vars, err)
 	}
+	vars.AudioFeatures = audioFeats[0]
 
 	returnTemplate(w, r, "track", vars, err)
 	return

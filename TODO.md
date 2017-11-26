@@ -8,4 +8,4 @@
 - add a search filter on lists
 - list and link all genres?
 - list the users top artists/tracks etc
-- get more data on track page - https://developer.spotify.com/web-api/get-audio-analysis/
+- switch to radar chart for track details?
