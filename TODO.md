@@ -8,3 +8,4 @@
 - list and link all genres?
 - list the users top artists/tracks etc
 - switch to radar chart for track details?
+- Put the header links back when logged out so you can see whats there
