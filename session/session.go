@@ -2,6 +2,7 @@ package session
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gorilla/sessions"
 )
@@ -19,8 +20,8 @@ const (
 
 func getSession(r *http.Request) *sessions.Session {
 
-	store := sessions.NewCookieStore([]byte("something-very-secret"))
-	session, err := store.Get(r, "spotify-tools-session")
+	store := sessions.NewCookieStore([]byte(os.Getenv("SPOTIFY_SESSION_SECRET")))
+	session, err := store.Get(r, "spotify-helper-session")
 	if err != nil {
 		// todo, show error page
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
