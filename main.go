@@ -28,19 +28,21 @@ func main() {
 
 	r := chi.NewRouter()
 	r.Get("/", homeHandler)
-	r.Get("/logout", logoutHandler)
-	r.Get("/login", loginHandler)
-	r.Get("/login-callback", loginCallbackHandler)
-	r.Get("/shuffle", shuffleHandler)
-	r.Get("/unpopular", unpopularHandler)
-	r.Get("/shuffle/{playlist}/{new}", shuffleActionHandler)
-	r.Get("/random", randomHandler)
-	r.Get("/random/{type}", randomHandler)
+	r.Get("/album/{album}", albumHandler)
+	r.Get("/artist/{artist}", artistHandler)
 	r.Get("/duplicates", duplicatesHandler)
 	r.Get("/duplicates/{playlist}/{new}", duplicatesActionHandler)
-	r.Get("/artist/{artist}", artistHandler)
-	r.Get("/album/{album}", albumHandler)
+	r.Get("/login", loginHandler)
+	r.Get("/login-callback", loginCallbackHandler)
+	r.Get("/logout", logoutHandler)
+	r.Get("/random", randomHandler)
+	r.Get("/random/{type}", randomHandler)
+	r.Get("/shuffle", shuffleHandler)
+	r.Get("/shuffle/{playlist}/{new}", shuffleActionHandler)
+	r.Get("/top", topHandler)
+	r.Get("/top/{type}", topHandler)
 	r.Get("/track/{track}", trackHandler)
+	r.Get("/unpopular", unpopularHandler)
 	r.Get("/user/{user}", userHandler)
 	r.Get("/user/{user}/playlist/{playlist}", playlistHandler)
 
@@ -94,13 +96,15 @@ func returnLoggedOutTemplate(w http.ResponseWriter, r *http.Request, err error) 
 	vars.ErrorMessage = "Please login"
 
 	returnTemplate(w, r, "error", vars, err)
+	return
 }
 
 func getTemplateFuncMap() map[string]interface{} {
 	return template.FuncMap{
-		"join":  func(a []string) string { return strings.Join(a, ", ") },
-		"title": func(a string) string { return strings.Title(a) },
-		"comma": func(a uint) string { return humanize.Comma(int64(a)) },
+		"join":    func(a []string) string { return strings.Join(a, ", ") },
+		"title":   func(a string) string { return strings.Title(a) },
+		"comma":   func(a uint) string { return humanize.Comma(int64(a)) },
+		"plusone": func(a int) int { return a + 1 },
 		"bool": func(a bool) string {
 			if a == true {
 				return "Yes"

@@ -17,8 +17,6 @@
     </li>
 </ul>
 
-{{ if .LoggedIn}}
-
 <div class="row">
 
 {{ if .SearchPlaylists}}
@@ -94,9 +92,5 @@
 {{end}}
 
 </div>
-
-{{else}}
-Please login so we can access the Spotify database with your account
-{{end}}
 
 {{ template "footer" .}} {{end}}

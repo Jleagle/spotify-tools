@@ -29,6 +29,8 @@ func GetAuthenticator(r *http.Request) (auth spotify.Authenticator) {
 		spotify.ScopePlaylistReadCollaborative,
 		spotify.ScopePlaylistModifyPublic,
 		spotify.ScopePlaylistModifyPrivate,
+		spotify.ScopeUserTopRead,
+		spotify.ScopeUserReadRecentlyPlayed,
 	}
 
 	host := r.Host

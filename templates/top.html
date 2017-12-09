@@ -1,0 +1,39 @@
+{{define "top"}} {{ template "header" .}}
+
+<h1>Top</h1>
+<p>Over the last six months.</p>
+
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link {{ if .FullArtistPage}}active{{end}}" href="/top/artists">Artists</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ if .FullTrackPage}}active{{end}}" href="/top/tracks">Tracks</a>
+    </li>
+</ul>
+
+{{ if .FullArtistPage}}
+{{ range $key, $value := .FullArtistPage.Artists }}
+<div class="media">
+    <a href="/artist/{{.ID}}"><img class="align-self-start mr-3" src="{{(index .Images 0).URL}}" alt="{{.Name}}"></a>
+    <div class="media-body">
+        <h5 class="mt-0">{{plusone $key}}. {{.Name}}</h5>
+        <p>{{genres .Genres}}</p>
+    </div>
+</div>
+{{ end }}
+{{end}}
+
+{{ if .FullTrackPage}}
+{{ range $key, $value := .FullTrackPage.Tracks }}
+<div class="media">
+    <a href="/track/{{.ID}}"><img class="align-self-start mr-3" src="{{(index .Album.Images 0).URL}}" alt="{{.Name}}"></a>
+    <div class="media-body">
+        <h5 class="mt-0">{{plusone $key}}. {{.Name}}</h5>
+        <p><a href="/album/{{.Album.ID}}">{{.Album.Name}}</a> - {{artists .Artists}}</p>
+    </div>
+</div>
+{{ end }}
+{{end}}
+
+{{ template "footer" .}} {{end}}

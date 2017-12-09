@@ -5,3 +5,7 @@ html {
 .btn-sm {
     padding: 0 .3rem;
 }
+
+.media img {
+    width: 64px;
+}

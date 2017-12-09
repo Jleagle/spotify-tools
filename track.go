@@ -31,6 +31,7 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find track"
 		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 
 	audioFeats, err := client.GetAudioFeatures(trackID)
@@ -38,6 +39,7 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find audio features"
 		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 	vars.AudioFeatures = audioFeats[0]
 
@@ -64,6 +66,7 @@ func albumHandler(w http.ResponseWriter, r *http.Request) {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = err.Error() //todo, copy this to other places
 		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 	vars.Album.AlbumType = strings.Title(vars.Album.AlbumType)
 
@@ -92,6 +95,7 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find artist"
 		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 
 	vars.Tracks, err = client.GetArtistsTopTracks(id, session.Read(r, session.UserCountry))
@@ -99,6 +103,7 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find artists top tracks"
 		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 
 	vars.Albums, err = client.GetArtistAlbumsOpt(id, spotify.GetOptions(r, spotify.MaxArtistAlbums, 0), nil)
@@ -106,6 +111,7 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find artists albums"
 		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 
 	returnTemplate(w, r, "artist", vars, err)
@@ -131,6 +137,7 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't get playlist"
 		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 
 	returnTemplate(w, r, "playlist", vars, err)
@@ -158,6 +165,7 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find user"
 		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 	if vars.User.DisplayName == "" {
 		vars.User.DisplayName = vars.User.ID
@@ -168,6 +176,7 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find user playlists"
 		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 
 	returnTemplate(w, r, "user", vars, err)

@@ -9,7 +9,6 @@ import (
 	spot "github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
 	"github.com/go-chi/chi"
-	"github.com/kr/pretty"
 	"github.com/zmb3/spotify"
 )
 
@@ -42,7 +41,8 @@ func randomHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		pretty.Print(err)
+		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 
 	returnTemplate(w, r, "random", vars, err)

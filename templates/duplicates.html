@@ -1,10 +1,8 @@
 {{define "duplicates"}} {{ template "header" .}}
 
 <h1>Duplicates</h1>
-<p>Sometimes you can end up with a lot of songs in your playslists more than once, this tool will remove the
-    duplicates</p>
+<p>Sometimes you can end up with a lot of songs in your playslists more than once, this tool will remove the duplicates</p>
 
-{{ if .LoggedIn}}
 <table class="table table-hover table-sm">
     <thead>
     <tr>
@@ -21,20 +19,17 @@
         <td><a href="/user/{{ .Owner.ID }}">{{ .Owner.ID }}</a></td>
         <td>{{ .Tracks.Total }} tracks</td>
         <td>
-            {{ if gt .Tracks.Total 1 }}
+        {{ if gt .Tracks.Total 1 }}
             <a class="btn btn-primary btn-sm" href="/duplicates/{{.ID}}/1" role="button">New Playlist</a>
-            {{ if eq $.LoggedInID .Owner.ID }}
+        {{ if eq $.LoggedInID .Owner.ID }}
             <a class="btn btn-primary btn-sm" href="/duplicates/{{.ID}}/0" role="button">Same Playlist</a>
-            {{ end }}
-            {{ end }}
+        {{ end }}
+        {{ end }}
         </td>
     </tr>
     {{ end }}
 
     </tbody>
 </table>
-{{else}}
-x
-{{end}}
 
 {{ template "footer" .}} {{end}}

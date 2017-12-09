@@ -4,7 +4,6 @@
 <p>Shuffle in Spotify probably doesnt do what you think it does and has a tendency to play certain songs more while
     leaving others unplayed.</p>
 
-{{ if .LoggedIn}}
 <table class="table table-hover table-sm">
     <thead>
     <tr>
@@ -21,19 +20,16 @@
         <td><a href="/user/{{ .Owner.ID }}">{{ .Owner.ID }}</a></td>
         <td>{{ .Tracks.Total }} tracks</td>
         <td>
-            {{ if gt .Tracks.Total 1 }}
+        {{ if gt .Tracks.Total 1 }}
             <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/1" role="button">New Playlist</a>
-            {{ if eq $.LoggedInID .Owner.ID }}
+        {{ if eq $.LoggedInID .Owner.ID }}
             <a class="btn btn-primary btn-sm" href="/shuffle/{{.ID}}/0" role="button">Same Playlist</a>
-            {{ end }}
-            {{ end }}
+        {{ end }}
+        {{ end }}
         </td>
     </tr>
     {{ end }}
     </tbody>
 </table>
-{{else}}
-Please login
-{{end}}
 
 {{ template "footer" .}} {{end}}
