@@ -65,16 +65,18 @@ func GetClient(r *http.Request) (client spotify.Client) {
 	return GetAuthenticator(r).NewClient(token)
 }
 
-func GetOptions(r *http.Request, limit int, offset int) (opt *spotify.Options) {
+func GetOptions(r *http.Request, limit int, offset int, TimeRange string) (opt *spotify.Options) {
 
 	opt = &spotify.Options{}
 	opt.Country = new(string)
 	opt.Limit = new(int)
 	opt.Offset = new(int)
+	opt.Timerange = new(string)
 
 	*opt.Country = session.Read(r, session.UserCountry)
 	*opt.Limit = limit
 	*opt.Offset = offset
+	*opt.Timerange = TimeRange
 
 	return opt
 }
@@ -89,7 +91,7 @@ func CurrentUsersPlaylists(r *http.Request) (playlists []spotify.SimplePlaylist,
 
 	for len(playlists) < totalTracks {
 
-		options := GetOptions(r, PlayslistsLimit, page*PlayslistsLimit)
+		options := GetOptions(r, PlayslistsLimit, page*PlayslistsLimit, "")
 		response, err := client.CurrentUsersPlaylistsOpt(options)
 		if err != nil {
 			return playlists, err

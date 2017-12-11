@@ -27,7 +27,7 @@ func randomHandler(w http.ResponseWriter, r *http.Request) {
 	client := spot.GetClient(r)
 	search := helpers.RandomString(1, "aeiou")
 	offset := rand.Intn(1000)
-	options := spot.GetOptions(r, 3, offset)
+	options := spot.GetOptions(r, 3, offset, "")
 
 	switch chi.URLParam(r, "type") {
 	case "albums", "":

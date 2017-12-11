@@ -10,3 +10,5 @@
 - switch to radar chart for track details?
 - Put the header links back when logged out so you can see whats there
 - finish Key on track page
+- Add ads
+- Make different return objects for each template

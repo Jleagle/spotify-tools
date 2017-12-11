@@ -76,7 +76,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 		go func(chunk int) {
 			defer waitGroup.Done()
 
-			options := spot.GetOptions(r, spot.TracksLimit, chunk*spot.TracksLimit)
+			options := spot.GetOptions(r, spot.TracksLimit, chunk*spot.TracksLimit, "")
 			tracks, err := client.GetPlaylistTracksOpt(username, playlist.ID, options, "")
 			if err != nil {
 				fmt.Println("Getting tracks to shuffle: " + err.Error())

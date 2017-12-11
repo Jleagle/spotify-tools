@@ -23,7 +23,7 @@ func unpopularHandler(w http.ResponseWriter, r *http.Request) {
 	vars := structs.TemplateVars{}
 
 	client := spot.GetClient(r)
-	vars.SearchAlbums, err = client.SearchOpt("tag:new", spotify.SearchTypeAlbum, spot.GetOptions(r, 3, 0))
+	vars.SearchAlbums, err = client.SearchOpt("tag:new", spotify.SearchTypeAlbum, spot.GetOptions(r, 3, 0, ""))
 
 	if err != nil {
 		pretty.Print(err)

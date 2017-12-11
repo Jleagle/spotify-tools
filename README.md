@@ -2,7 +2,7 @@
 
 Spotify Helper was built to fill in some of the gaps in Spotify's features
 
-## Contributing
+## Running the site locally
 
 ##### Export the following global variables:
 - export SPOTIFY_CLIENT_ID="from-spotify"

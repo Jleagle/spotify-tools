@@ -26,4 +26,6 @@ type TemplateVars struct {
 	AudioFeatures   *spotify.AudioFeatures
 	FullArtistPage  *spotify.FullArtistPage
 	FullTrackPage   *spotify.FullTrackPage
+	TimeRange       string
+	ArtistTrack     string
 }

@@ -41,6 +41,7 @@ func main() {
 	r.Get("/shuffle/{playlist}/{new}", shuffleActionHandler)
 	r.Get("/top", topHandler)
 	r.Get("/top/{type}", topHandler)
+	r.Get("/top/{type}/{range}", topHandler)
 	r.Get("/track/{track}", trackHandler)
 	r.Get("/unpopular", unpopularHandler)
 	r.Get("/user/{user}", userHandler)
@@ -62,6 +63,10 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 	pageData.Flashes = session.GetFlashes(w, r)
 	pageData.Highlight = r.URL.Query().Get("highlight")
 	pageData.LoggedInID = session.Read(r, session.UserID)
+
+	if page == "error" && err == nil {
+		pageData.ErrorMessage = err.Error()
+	}
 
 	// Get current app path
 	_, file, _, ok := runtime.Caller(0)
