@@ -4,8 +4,8 @@
 [[projects]]
   branch = "master"
   name = "github.com/Jleagle/go-helpers"
-  packages = ["helpers"]
-  revision = "4f0a1af16dc317bafde0b73c3d1cc0193feb0078"
+  packages = ["helpers","rollbar"]
+  revision = "e6febc9b5aaa6f86f0e28be2c9c490c43c97bcc7"
 
 [[projects]]
   branch = "master"
@@ -56,6 +56,12 @@
   revision = "7cafcd837844e784b526369c9bce262804aebc60"
 
 [[projects]]
+  name = "github.com/stvp/rollbar"
+  packages = ["."]
+  revision = "b20261800d8cda3be14dcef0d1a8320779bba61a"
+  version = "v0.5.1"
+
+[[projects]]
   branch = "master"
   name = "github.com/zmb3/spotify"
   packages = ["."]
@@ -82,6 +88,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "87e3dcb922ad477904ebde60031abe7f7fcf8168d920caf684c592f4d14d8622"
+  inputs-digest = "847f9a0b3743b890a6bab7fd78878f64113c3c9a25239f9fc34dd89ff4789999"
   solver-name = "gps-cdcl"
   solver-version = 1

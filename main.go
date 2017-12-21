@@ -13,10 +13,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Jleagle/go-helpers/rollbar"
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/Jleagle/spotifyhelper/structs"
 	"github.com/dustin/go-humanize"
 	"github.com/go-chi/chi"
+	roll "github.com/stvp/rollbar"
 	"github.com/zmb3/spotify"
 )
 
@@ -25,6 +27,10 @@ func init() {
 }
 
 func main() {
+
+	roll.Token = os.Getenv("SPOTIFY_ROLLBAR_PRIVATE")
+	roll.Environment = os.Getenv("ENV")
+	defer roll.Wait()
 
 	r := chi.NewRouter()
 	r.Get("/", homeHandler)
@@ -57,7 +63,9 @@ func main() {
 
 func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageData structs.TemplateVars, err error) {
 
-	// todo, log errors
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
 
 	pageData.LoggedIn = session.IsLoggedIn(r)
 	pageData.Flashes = session.GetFlashes(w, r)
