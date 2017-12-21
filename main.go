@@ -64,7 +64,7 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 	pageData.Highlight = r.URL.Query().Get("highlight")
 	pageData.LoggedInID = session.Read(r, session.UserID)
 
-	if page == "error" && err == nil {
+	if page == "error" && err != nil {
 		pageData.ErrorMessage = err.Error()
 	}
 
