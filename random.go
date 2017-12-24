@@ -14,15 +14,24 @@ import (
 
 func randomHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, "/random")
+	vars := structs.TemplateVars{}
 
-	if !session.IsLoggedIn(r) {
-		returnLoggedOutTemplate(w, r, nil)
+	err := session.Write(w, r, session.LastPage, "/random")
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
 		return
 	}
 
-	var err error
-	vars := structs.TemplateVars{}
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
 
 	client := spot.GetClient(r)
 	search := helpers.RandomString(1, "aeiou")

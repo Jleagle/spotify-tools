@@ -11,17 +11,24 @@ import (
 
 func topHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, "/top")
+	vars := structs.TemplateVars{}
 
-	if !session.IsLoggedIn(r) {
-		returnLoggedOutTemplate(w, r, nil)
+	err := session.Write(w, r, session.LastPage, "/top")
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
 		return
 	}
 
-	var err error
-	vars := structs.TemplateVars{}
-
-	client := spot.GetClient(r)
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
+		returnLoggedOutTemplate(w, r, nil)
+		return
+	}
 
 	var dateRange string
 
@@ -38,6 +45,9 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 	if artistTrack == "" {
 		artistTrack = "artists"
 	}
+
+	client := spot.GetClient(r)
+
 	switch artistTrack {
 	case "artists", "":
 		vars.FullArtistPage, err = client.CurrentUsersTopArtistsOpt(spot.GetOptions(r, 50, 0, dateRange))

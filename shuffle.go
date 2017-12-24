@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/Jleagle/go-helpers/helpers"
+	"github.com/Jleagle/go-helpers/rollbar"
 	"github.com/Jleagle/spotifyhelper/session"
 	spot "github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
@@ -16,19 +17,29 @@ import (
 
 func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, "/shuffle")
+	vars := structs.TemplateVars{}
 
-	if !session.IsLoggedIn(r) {
+	err := session.Write(w, r, session.LastPage, "/shuffle")
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
 		returnLoggedOutTemplate(w, r, nil)
 		return
 	}
 
-	var err error
-	vars := structs.TemplateVars{}
-
+	// Get playlists
 	vars.Playlists, err = spot.CurrentUsersPlaylists(r)
 	if err != nil {
-		returnTemplate(w, r, "error", structs.TemplateVars{}, err)
+		returnTemplate(w, r, "error", vars, err)
 		return
 	}
 
@@ -38,7 +49,15 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 
 func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 
-	if !session.IsLoggedIn(r) {
+	vars := structs.TemplateVars{}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
 		returnLoggedOutTemplate(w, r, nil)
 		return
 	}
@@ -46,7 +65,10 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	playlistID := chi.URLParam(r, "playlist")
 	createNew := chi.URLParam(r, "new")
 
-	username := session.Read(r, session.UserID)
+	username, err := session.Read(r, session.UserID)
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
 
 	client := spot.GetClient(r)
 
@@ -60,6 +82,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 			session.SetFlash(w, r, err.Error())
 		}
 
+		rollbar.ErrorInfo(err)
 		http.Redirect(w, r, "/shuffle?highlight="+playlistID, 302)
 		return
 	}
@@ -67,7 +90,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	// Get tracks
 	var trackChunks = int(math.Ceil(float64(playlist.Tracks.Total) / spot.TracksLimit))
 	var waitGroup sync.WaitGroup
-	var trackStrings = []string{}
+	var trackStrings []string
 	messages := make(chan string, playlist.Tracks.Total)
 
 	for i := 0; i < trackChunks; i++ {
@@ -79,8 +102,11 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 			options := spot.GetOptions(r, spot.TracksLimit, chunk*spot.TracksLimit, "")
 			tracks, err := client.GetPlaylistTracksOpt(username, playlist.ID, options, "")
 			if err != nil {
-				fmt.Println("Getting tracks to shuffle: " + err.Error())
-				//return
+
+				rollbar.ErrorInfo(err)
+				session.SetFlash(w, r, "Failed to get playlist tracks")
+				http.Redirect(w, r, "/shuffle?highlight="+playlistID, 302)
+				return
 			}
 
 			for _, v := range tracks.Tracks {
@@ -92,7 +118,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	waitGroup.Wait()
 	close(messages)
 
-	var invalidTracks int = 0
+	var invalidTracks = 0
 	for message := range messages {
 		if message == "" {
 			invalidTracks++
@@ -108,6 +134,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check we have as many tracks as we should
 	if len(trackStrings)+invalidTracks != playlist.Tracks.Total {
+
 		session.SetFlash(w, r, "Track count mismatch :(")
 		http.Redirect(w, r, "/shuffle?highlight="+playlistID, 302)
 		return
@@ -115,6 +142,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check playlist is worth shuffling
 	if len(trackStrings) < 2 {
+
 		session.SetFlash(w, r, "Playlist does not have enough track to shuffle.")
 		http.Redirect(w, r, "/shuffle?highlight="+playlistID, 302)
 		return
@@ -124,6 +152,8 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	if createNew == "1" {
 		playlist, err = client.CreatePlaylistForUser(username, playlist.Name+" Shuffled", false)
 		if err != nil {
+
+			rollbar.ErrorInfo(err)
 			session.SetFlash(w, r, "Unable to create new playlist: "+err.Error())
 			http.Redirect(w, r, "/shuffle?highlight="+playlistID, 302)
 			return
@@ -138,6 +168,8 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	// Delete tracks
 	err = client.ReplacePlaylistTracks("jleagle", playlist.ID)
 	if err != nil {
+
+		rollbar.ErrorInfo(err)
 		session.SetFlash(w, r, err.Error())
 		http.Redirect(w, r, "/shuffle?highlight="+playlistID, 302)
 		return
@@ -148,7 +180,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	for _, chunk := range chunks {
 
 		// Convert back to IDs
-		trackIds := []spotify.ID{}
+		var trackIds []spotify.ID
 		for _, v := range chunk {
 			trackIds = append(trackIds, spotify.ID(v))
 		}
@@ -158,7 +190,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 			defer waitGroup.Done()
 			_, err = client.AddTracksToPlaylist(username, playlist.ID, trackIds...)
 			if err != nil {
-				fmt.Println("Adding shuffled tracks back in: " + err.Error())
+				rollbar.ErrorInfo(err)
 			}
 		}()
 	}

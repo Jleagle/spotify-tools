@@ -1,4 +1,3 @@
-- make sure oauth errors are handled with propper error pages
 - Change shuffle bool toggle to query string
 - Get all albums on an artist, only 50 currently
 - add sitemap
@@ -8,7 +7,6 @@
 - list and link all genres?
 - list the users top artists/tracks etc
 - switch to radar chart for track details?
-- Put the header links back when logged out so you can see whats there
 - finish Key on track page
 - Add ads
 - Make different return objects for each template

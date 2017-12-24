@@ -1,13 +1,13 @@
 package spotify
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/Jleagle/go-helpers/rollbar"
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2"
@@ -48,18 +48,34 @@ func GetAuthenticator(r *http.Request) (auth spotify.Authenticator) {
 
 func GetClient(r *http.Request) (client spotify.Client) {
 
-	expiry := session.Read(r, session.TokenExpiry)
+	expiry, err := session.Read(r, session.TokenExpiry)
+	if err != nil {
+		rollbar.ErrorCritical(err)
+	}
 
 	i, err := strconv.ParseInt(expiry, 10, 64)
 	if err != nil {
-		fmt.Println("Converting expiry")
+		rollbar.ErrorError(err)
 	}
 
+	// Make a token
 	token := &oauth2.Token{
-		AccessToken:  session.Read(r, session.TokenToken),
-		TokenType:    session.Read(r, session.TokenType),
-		RefreshToken: session.Read(r, session.TokenRefresh),
-		Expiry:       time.Unix(int64(i), 0),
+		Expiry: time.Unix(int64(i), 0),
+	}
+
+	token.AccessToken, err = session.Read(r, session.TokenToken)
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
+
+	token.TokenType, err = session.Read(r, session.TokenType)
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
+
+	token.RefreshToken, err = session.Read(r, session.TokenRefresh)
+	if err != nil {
+		rollbar.ErrorError(err)
 	}
 
 	return GetAuthenticator(r).NewClient(token)
@@ -73,7 +89,13 @@ func GetOptions(r *http.Request, limit int, offset int, TimeRange string) (opt *
 	opt.Offset = new(int)
 	opt.Timerange = new(string)
 
-	*opt.Country = session.Read(r, session.UserCountry)
+	// Get country
+	country, err := session.Read(r, session.UserCountry)
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
+
+	*opt.Country = country
 	*opt.Limit = limit
 	*opt.Offset = offset
 	*opt.Timerange = TimeRange

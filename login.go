@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/Jleagle/go-helpers/helpers"
+	"github.com/Jleagle/go-helpers/rollbar"
 	"github.com/Jleagle/spotifyhelper/session"
 	spot "github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
@@ -13,13 +13,26 @@ import (
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 
-	if session.IsLoggedIn(r) {
+	vars := structs.TemplateVars{}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if loggedIn {
 		postlogin(w, r)
 		return
 	}
 
+	// Create random state
 	state := helpers.RandomString(6, "abcdefghijklmnopqrstuvwxyz")
-	session.Write(w, r, session.AuthState, state)
+	err = session.Write(w, r, session.AuthState, state)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
 
 	auth := spot.GetAuthenticator(r)
 	http.Redirect(w, r, auth.AuthURL(state), 302)
@@ -28,15 +41,26 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
 func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
-	if session.IsLoggedIn(r) {
+	vars := structs.TemplateVars{}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+
+		vars.ErrorMessage = "Spotify: " + err.Error()
+
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if loggedIn {
 		postlogin(w, r)
 		return
 	}
 
+	// Check for OAuth errors
 	queryErr := r.URL.Query().Get("error")
 	if queryErr != "" {
 
-		vars := structs.TemplateVars{}
 		vars.ErrorMessage = "Spotify: " + queryErr
 
 		returnTemplate(w, r, "error", vars, nil)
@@ -44,18 +68,30 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	auth := spot.GetAuthenticator(r)
-	state := session.Read(r, session.AuthState)
+	state, err := session.Read(r, session.AuthState)
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
 
+	// Check state and get token
 	tok, err := auth.Token(state, r)
 	if err != nil {
-		returnTemplate(w, r, "error", structs.TemplateVars{}, err)
+
+		vars.ErrorMessage = "Spotify: " + err.Error()
+
+		returnTemplate(w, r, "error", vars, err)
 		return
 	}
 
+	// Save user info to cookie
 	client := auth.NewClient(tok)
 	user, err := client.CurrentUser()
 	if err != nil {
-		fmt.Println("Getting user details: " + err.Error())
+
+		vars.ErrorMessage = "Spotify: " + err.Error()
+
+		returnTemplate(w, r, "error", vars, err)
+		return
 	}
 
 	session.WriteMany(w, r, map[string]string{
@@ -75,7 +111,11 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 func postlogin(w http.ResponseWriter, r *http.Request) {
 
 	session.SetFlash(w, r, "Logged In :)")
-	lastPage := session.Read(r, session.LastPage)
+	lastPage, err := session.Read(r, session.LastPage)
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
+
 	http.Redirect(w, r, lastPage, 302)
 	return
 }

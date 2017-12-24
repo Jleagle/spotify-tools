@@ -9,8 +9,14 @@ import (
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, "/")
+	vars := structs.TemplateVars{}
 
-	returnTemplate(w, r, "home", structs.TemplateVars{}, nil)
+	err := session.Write(w, r, session.LastPage, "/")
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	returnTemplate(w, r, "home", vars, nil)
 	return
 }

@@ -18,92 +18,102 @@ const (
 	TokenExpiry  = "token.expiry"
 )
 
-func getSession(r *http.Request) *sessions.Session {
+func getSession(r *http.Request) (*sessions.Session, error) {
 
 	store := sessions.NewCookieStore([]byte(os.Getenv("SPOTIFY_SESSION_SECRET")))
 	session, err := store.Get(r, "spotify-helper-session")
-	if err != nil {
-		// todo, show error page
-		//http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
 
 	session.Options = &sessions.Options{
 		MaxAge: 0, // Session
 		Path:   "/",
 	}
 
-	return session
+	return session, err
 }
 
-func Read(r *http.Request, key string) string {
+func Read(r *http.Request, key string) (value string, err error) {
 
-	session := getSession(r)
+	session, err := getSession(r)
+	if err != nil {
+		return "", err
+	}
 
 	if session.Values[key] == nil {
 		session.Values[key] = ""
 	}
 
-	return session.Values[key].(string)
+	return session.Values[key].(string), err
 }
 
-func Write(w http.ResponseWriter, r *http.Request, name string, value string) {
+func Write(w http.ResponseWriter, r *http.Request, name string, value string) (err error) {
 
-	session := getSession(r)
+	session, err := getSession(r)
+	if err != nil {
+		return err
+	}
+
 	session.Values[name] = value
 
-	err := session.Save(r, w)
-	if err != nil {
-		// todo, show error page
-	}
+	return session.Save(r, w)
 }
 
-func WriteMany(w http.ResponseWriter, r *http.Request, values map[string]string) {
+func WriteMany(w http.ResponseWriter, r *http.Request, values map[string]string) (err error) {
 
-	session := getSession(r)
+	session, err := getSession(r)
+	if err != nil {
+		return err
+	}
+
 	for k, v := range values {
 		session.Values[k] = v
 	}
 
-	err := session.Save(r, w)
-	if err != nil {
-		// todo, show error page
-	}
+	return session.Save(r, w)
 }
 
-func Clear(w http.ResponseWriter, r *http.Request) {
+func Clear(w http.ResponseWriter, r *http.Request) (err error) {
 
-	session := getSession(r)
+	session, err := getSession(r)
 	session.Values = make(map[interface{}]interface{})
 
-	err := session.Save(r, w)
 	if err != nil {
-		// todo, show error page
+		return err
 	}
+
+	err = session.Save(r, w)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func GetFlashes(w http.ResponseWriter, r *http.Request) []interface{} {
+func GetFlashes(w http.ResponseWriter, r *http.Request) (flashes []interface{}, err error) {
 
-	session := getSession(r)
-
-	flashes := session.Flashes()
-	err := session.Save(r, w)
+	session, err := getSession(r)
 	if err != nil {
-		// todo, show error page
+		return nil, err
 	}
-	return flashes
+
+	flashes = session.Flashes()
+	err = session.Save(r, w)
+	if err != nil {
+		return nil, err
+	}
+
+	return flashes, nil
 }
 
-func SetFlash(w http.ResponseWriter, r *http.Request, flash string) {
+func SetFlash(w http.ResponseWriter, r *http.Request, flash string) (err error) {
 
-	session := getSession(r)
+	session, err := getSession(r)
 
 	session.AddFlash(flash)
-	err := session.Save(r, w)
-	if err != nil {
-		// todo, show error page
-	}
+
+	return session.Save(r, w)
 }
 
-func IsLoggedIn(r *http.Request) bool {
-	return Read(r, TokenToken) != ""
+func IsLoggedIn(r *http.Request) (val bool, err error) {
+	read, err := Read(r, TokenToken)
+	return read != "", err
 }

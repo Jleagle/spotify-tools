@@ -10,19 +10,28 @@ import (
 
 func duplicatesHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, "/duplicates")
+	vars := structs.TemplateVars{}
 
-	if !session.IsLoggedIn(r) {
+	err := session.Write(w, r, session.LastPage, "/duplicates")
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
 		returnLoggedOutTemplate(w, r, nil)
 		return
 	}
 
-	var err error
-	vars := structs.TemplateVars{}
-
 	vars.Playlists, err = spot.CurrentUsersPlaylists(r)
 	if err != nil {
-		returnTemplate(w, r, "error", structs.TemplateVars{}, err)
+		returnTemplate(w, r, "error", vars, err)
 		return
 	}
 
@@ -32,7 +41,15 @@ func duplicatesHandler(w http.ResponseWriter, r *http.Request) {
 
 func duplicatesActionHandler(w http.ResponseWriter, r *http.Request) {
 
-	if !session.IsLoggedIn(r) {
+	vars := structs.TemplateVars{}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
 		returnLoggedOutTemplate(w, r, nil)
 		return
 	}

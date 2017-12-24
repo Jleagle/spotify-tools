@@ -63,18 +63,32 @@ func main() {
 
 func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageData structs.TemplateVars, err error) {
 
+	// Log errors
 	if err != nil {
 		rollbar.ErrorError(err)
 	}
 
-	pageData.LoggedIn = session.IsLoggedIn(r)
-	pageData.Flashes = session.GetFlashes(w, r)
-	pageData.Highlight = r.URL.Query().Get("highlight")
-	pageData.LoggedInID = session.Read(r, session.UserID)
+	// Check if logged in
+	pageData.LoggedIn, err = session.IsLoggedIn(r)
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
+
+	pageData.Flashes, err = session.GetFlashes(w, r)
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
+
+	pageData.LoggedInID, err = session.Read(r, session.UserID)
+	if err != nil {
+		rollbar.ErrorError(err)
+	}
 
 	if page == "error" && err != nil {
 		pageData.ErrorMessage = err.Error()
 	}
+
+	pageData.Highlight = r.URL.Query().Get("highlight")
 
 	// Get current app path
 	_, file, _, ok := runtime.Caller(0)
@@ -93,13 +107,13 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 
 	t, err := template.New("t").Funcs(getTemplateFuncMap()).ParseFiles(always...)
 	if err != nil {
-		//logger.ErrExit(err.Error())
+		rollbar.ErrorCritical(err)
 	}
 
 	// Write a respone
 	err = t.ExecuteTemplate(w, page, pageData)
 	if err != nil {
-		//logger.ErrExit(err.Error())
+		rollbar.ErrorCritical(err)
 	}
 }
 

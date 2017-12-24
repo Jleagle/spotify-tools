@@ -13,9 +13,21 @@ import (
 
 func trackHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, r.URL.Path)
+	vars := structs.TemplateVars{}
 
-	if !session.IsLoggedIn(r) {
+	err := session.Write(w, r, session.LastPage, r.URL.Path)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
 		returnLoggedOutTemplate(w, r, nil)
 		return
 	}
@@ -23,9 +35,7 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 	trackID := spot.ID(chi.URLParam(r, "track"))
 	client := spotify.GetClient(r)
 
-	var err error
-	vars := structs.TemplateVars{}
-
+	// Get track
 	vars.Track, err = client.GetTrack(trackID)
 	if err != nil {
 		vars.ErrorCode = "404"
@@ -34,6 +44,7 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get audio features
 	audioFeats, err := client.GetAudioFeatures(trackID)
 	if err != nil {
 		vars.ErrorCode = "404"
@@ -49,17 +60,27 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 
 func albumHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, r.URL.Path)
+	vars := structs.TemplateVars{}
 
-	if !session.IsLoggedIn(r) {
+	err := session.Write(w, r, session.LastPage, r.URL.Path)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
 		returnLoggedOutTemplate(w, r, nil)
 		return
 	}
 
+	// Get album
 	client := spotify.GetClient(r)
-
-	var err error
-	vars := structs.TemplateVars{}
 
 	vars.Album, err = client.GetAlbum(spot.ID(chi.URLParam(r, "album")))
 	if err != nil {
@@ -76,9 +97,21 @@ func albumHandler(w http.ResponseWriter, r *http.Request) {
 
 func artistHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, r.URL.Path)
+	vars := structs.TemplateVars{}
 
-	if !session.IsLoggedIn(r) {
+	err := session.Write(w, r, session.LastPage, r.URL.Path)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
 		returnLoggedOutTemplate(w, r, nil)
 		return
 	}
@@ -87,9 +120,7 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 
 	client := spotify.GetClient(r)
 
-	var err error
-	vars := structs.TemplateVars{}
-
+	// Get artist
 	vars.Artist, err = client.GetArtist(id)
 	if err != nil {
 		vars.ErrorCode = "404"
@@ -98,7 +129,15 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vars.Tracks, err = client.GetArtistsTopTracks(id, session.Read(r, session.UserCountry))
+	// Get country
+	country, err := session.Read(r, session.UserCountry)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	// Get top tracks
+	vars.Tracks, err = client.GetArtistsTopTracks(id, country)
 	if err != nil {
 		vars.ErrorCode = "404"
 		vars.ErrorMessage = "Can't find artists top tracks"
@@ -106,6 +145,7 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get albums
 	vars.Albums, err = client.GetArtistAlbumsOpt(id, spotify.GetOptions(r, spotify.MaxArtistAlbums, 0, ""), nil)
 	if err != nil {
 		vars.ErrorCode = "404"
@@ -120,17 +160,27 @@ func artistHandler(w http.ResponseWriter, r *http.Request) {
 
 func playlistHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, r.URL.Path)
+	vars := structs.TemplateVars{}
 
-	if !session.IsLoggedIn(r) {
+	err := session.Write(w, r, session.LastPage, r.URL.Path)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
 		returnLoggedOutTemplate(w, r, nil)
 		return
 	}
 
+	// Get playlist
 	client := spotify.GetClient(r)
-
-	var err error
-	vars := structs.TemplateVars{}
 
 	vars.Playlist, err = client.GetPlaylist(chi.URLParam(r, "user"), spot.ID(chi.URLParam(r, "playlist")))
 	if err != nil {
@@ -146,9 +196,21 @@ func playlistHandler(w http.ResponseWriter, r *http.Request) {
 
 func userHandler(w http.ResponseWriter, r *http.Request) {
 
-	session.Write(w, r, session.LastPage, r.URL.Path)
+	vars := structs.TemplateVars{}
 
-	if !session.IsLoggedIn(r) {
+	err := session.Write(w, r, session.LastPage, r.URL.Path)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	// Check if logged in
+	loggedIn, err := session.IsLoggedIn(r)
+	if err != nil {
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if !loggedIn {
 		returnLoggedOutTemplate(w, r, nil)
 		return
 	}
@@ -157,9 +219,7 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 
 	client := spotify.GetClient(r)
 
-	var err error
-	vars := structs.TemplateVars{}
-
+	// Get profile
 	vars.User, err = client.GetUsersPublicProfile(spot.ID(id))
 	if err != nil {
 		vars.ErrorCode = "404"
@@ -171,6 +231,7 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 		vars.User.DisplayName = vars.User.ID
 	}
 
+	// Get playlists
 	vars.UserPlaylists, err = client.GetPlaylistsForUser(id)
 	if err != nil {
 		vars.ErrorCode = "404"
