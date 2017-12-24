@@ -1,6 +1,5 @@
 - Change shuffle bool toggle to query string
 - Get all albums on an artist, only 50 currently
-- add sitemap
 - test shuffleing local tracks
 - create playlist from lastfm, youtube
 - add a search filter on lists

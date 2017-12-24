@@ -43,6 +43,7 @@ func main() {
 	r.Get("/logout", logoutHandler)
 	r.Get("/random", randomHandler)
 	r.Get("/random/{type}", randomHandler)
+	r.Get("/sitemap.xml", siteMapHandler)
 	r.Get("/shuffle", shuffleHandler)
 	r.Get("/shuffle/{playlist}/{new}", shuffleActionHandler)
 	r.Get("/top", topHandler)
