@@ -7,5 +7,4 @@
 - list the users top artists/tracks etc
 - switch to radar chart for track details?
 - finish Key on track page
-- Add ads
 - Make different return objects for each template
