@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/Jleagle/canihave/helpers"
 	"github.com/Jleagle/spotifyhelper/session"
 	spot "github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
@@ -30,26 +31,20 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var dateRange string
-
-	switch chi.URLParam(r, "range") {
-	case "years":
-		dateRange = "long"
-	case "months":
-		dateRange = "medium"
-	case "weeks", "":
+	var dateRange = chi.URLParam(r, "range")
+	if !helpers.InArray(dateRange, []string{"long", "medium", "short"}) {
 		dateRange = "short"
 	}
 
 	artistTrack := chi.URLParam(r, "type")
-	if artistTrack == "" {
+	if !helpers.InArray(artistTrack, []string{"artists", "tracks"}) {
 		artistTrack = "artists"
 	}
 
 	client := spot.GetClient(r)
 
 	switch artistTrack {
-	case "artists", "":
+	case "artists":
 		vars.FullArtistPage, err = client.CurrentUsersTopArtistsOpt(spot.GetOptions(r, 50, 0, dateRange))
 	case "tracks":
 		vars.FullTrackPage, err = client.CurrentUsersTopTracksOpt(spot.GetOptions(r, 50, 0, dateRange))

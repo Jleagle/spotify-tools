@@ -4,19 +4,19 @@
 
 <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
-        <a class="nav-link {{ if .FullArtistPage}}active{{end}}" href="/top/artists">Artists</a>
+        <a class="nav-link {{ if .FullArtistPage}}active{{end}}" href="/top/artists/{{.TimeRange}}">Artists</a>
     </li>
     <li class="nav-item mr-5">
-        <a class="nav-link {{ if .FullTrackPage}}active{{end}}" href="/top/tracks">Tracks</a>
+        <a class="nav-link {{ if .FullTrackPage}}active{{end}}" href="/top/tracks/{{.TimeRange}}">Tracks</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ if eq .TimeRange "short"}}active{{end}}" href="/top/{{.ArtistTrack}}/weeks">4 Weeks</a>
+        <a class="nav-link {{ if eq .TimeRange "short"}}active{{end}}" href="/top/{{.ArtistTrack}}/short">4 Weeks</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ if eq .TimeRange "medium"}}active{{end}}" href="/top/{{.ArtistTrack}}/months">6 Months</a>
+        <a class="nav-link {{ if eq .TimeRange "medium"}}active{{end}}" href="/top/{{.ArtistTrack}}/medium">6 Months</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ if eq .TimeRange "long"}}active{{end}}" href="/top/{{.ArtistTrack}}/years">Several Years</a>
+        <a class="nav-link {{ if eq .TimeRange "long"}}active{{end}}" href="/top/{{.ArtistTrack}}/long">Several Years</a>
     </li>
 </ul>
 
