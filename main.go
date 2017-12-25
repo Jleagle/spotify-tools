@@ -19,7 +19,7 @@ import (
 	"github.com/dustin/go-humanize"
 	"github.com/go-chi/chi"
 	roll "github.com/stvp/rollbar"
-	"github.com/zmb3/spotify"
+	spot "github.com/zmb3/spotify"
 )
 
 func init() {
@@ -141,7 +141,7 @@ func getTemplateFuncMap() map[string]interface{} {
 				return "No"
 			}
 		},
-		"artists": func(a []spotify.SimpleArtist) template.HTML {
+		"artists": func(a []spot.SimpleArtist) template.HTML {
 			var artists []string
 			for _, v := range a {
 				artists = append(artists, "<a href=\"/artist/"+string(v.ID)+"\">"+v.Name+"</a>")

@@ -9,10 +9,10 @@ import (
 	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/go-helpers/rollbar"
 	"github.com/Jleagle/spotifyhelper/session"
-	spot "github.com/Jleagle/spotifyhelper/spotify"
+	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
 	"github.com/go-chi/chi"
-	"github.com/zmb3/spotify"
+	spot "github.com/zmb3/spotify"
 )
 
 func shuffleHandler(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +37,7 @@ func shuffleHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get playlists
-	vars.Playlists, err = spot.CurrentUsersPlaylists(r)
+	vars.Playlists, err = spotify.CurrentUsersPlaylists(r)
 	if err != nil {
 		returnTemplate(w, r, "error", vars, err)
 		return
@@ -70,10 +70,10 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 		rollbar.ErrorError(err)
 	}
 
-	client := spot.GetClient(r)
+	client := spotify.GetClient(r)
 
 	// Get playlist
-	playlist, err := client.GetPlaylist(username, spotify.ID(playlistID))
+	playlist, err := client.GetPlaylist(username, spot.ID(playlistID))
 	if err != nil {
 
 		if err.Error() == "Not found." {
@@ -88,7 +88,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get tracks
-	var trackChunks = int(math.Ceil(float64(playlist.Tracks.Total) / spot.TracksLimit))
+	var trackChunks = int(math.Ceil(float64(playlist.Tracks.Total) / spotify.TracksLimit))
 	var waitGroup sync.WaitGroup
 	var trackStrings []string
 	messages := make(chan string, playlist.Tracks.Total)
@@ -99,7 +99,7 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 		go func(chunk int) {
 			defer waitGroup.Done()
 
-			options := spot.GetOptions(r, spot.TracksLimit, chunk*spot.TracksLimit, "")
+			options := spotify.GetOptions(r, spotify.TracksLimit, chunk*spotify.TracksLimit, "")
 			tracks, err := client.GetPlaylistTracksOpt(username, playlist.ID, options, "")
 			if err != nil {
 
@@ -176,13 +176,13 @@ func shuffleActionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Chunk the tracks to be added back
-	chunks := helpers.ArrayChunk(trackStrings, spot.TracksLimit)
+	chunks := helpers.ArrayChunk(trackStrings, spotify.TracksLimit)
 	for _, chunk := range chunks {
 
 		// Convert back to IDs
-		var trackIds []spotify.ID
+		var trackIds []spot.ID
 		for _, v := range chunk {
-			trackIds = append(trackIds, spotify.ID(v))
+			trackIds = append(trackIds, spot.ID(v))
 		}
 
 		waitGroup.Add(1)

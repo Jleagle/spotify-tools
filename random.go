@@ -6,10 +6,10 @@ import (
 
 	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/spotifyhelper/session"
-	spot "github.com/Jleagle/spotifyhelper/spotify"
+	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
 	"github.com/go-chi/chi"
-	"github.com/zmb3/spotify"
+	spot "github.com/zmb3/spotify"
 )
 
 func randomHandler(w http.ResponseWriter, r *http.Request) {
@@ -33,20 +33,20 @@ func randomHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := spot.GetClient(r)
+	client := spotify.GetClient(r)
 	search := helpers.RandomString(1, "aeiou")
 	offset := rand.Intn(1000)
-	options := spot.GetOptions(r, 3, offset, "")
+	options := spotify.GetOptions(r, 3, offset, "")
 
 	switch chi.URLParam(r, "type") {
 	case "albums", "":
-		vars.SearchAlbums, err = client.SearchOpt(search, spotify.SearchTypeAlbum, options)
+		vars.SearchAlbums, err = client.SearchOpt(search, spot.SearchTypeAlbum, options)
 	case "artists":
-		vars.SearchArtists, err = client.SearchOpt(search, spotify.SearchTypeArtist, options)
+		vars.SearchArtists, err = client.SearchOpt(search, spot.SearchTypeArtist, options)
 	case "tracks":
-		vars.SearchTracks, err = client.SearchOpt(search, spotify.SearchTypeTrack, options)
+		vars.SearchTracks, err = client.SearchOpt(search, spot.SearchTypeTrack, options)
 	case "playlists":
-		vars.SearchPlaylists, err = client.SearchOpt(search, spotify.SearchTypePlaylist, options)
+		vars.SearchPlaylists, err = client.SearchOpt(search, spot.SearchTypePlaylist, options)
 	}
 
 	if err != nil {

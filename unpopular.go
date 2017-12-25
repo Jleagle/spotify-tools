@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/Jleagle/spotifyhelper/session"
-	spot "github.com/Jleagle/spotifyhelper/spotify"
+	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
-	"github.com/zmb3/spotify"
+	spot "github.com/zmb3/spotify"
 )
 
 func unpopularHandler(w http.ResponseWriter, r *http.Request) {
@@ -31,9 +31,9 @@ func unpopularHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get albums
-	client := spot.GetClient(r)
+	client := spotify.GetClient(r)
 
-	vars.SearchAlbums, err = client.SearchOpt("tag:new", spotify.SearchTypeAlbum, spot.GetOptions(r, 3, 0, ""))
+	vars.SearchAlbums, err = client.SearchOpt("tag:new", spot.SearchTypeAlbum, spotify.GetOptions(r, 3, 0, ""))
 	if err != nil {
 		returnTemplate(w, r, "error", vars, err)
 		return

@@ -7,7 +7,7 @@ import (
 	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/go-helpers/rollbar"
 	"github.com/Jleagle/spotifyhelper/session"
-	spot "github.com/Jleagle/spotifyhelper/spotify"
+	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
 )
 
@@ -34,7 +34,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auth := spot.GetAuthenticator(r)
+	auth := spotify.GetAuthenticator(r)
 	http.Redirect(w, r, auth.AuthURL(state), 302)
 	return
 }
@@ -67,7 +67,7 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auth := spot.GetAuthenticator(r)
+	auth := spotify.GetAuthenticator(r)
 	state, err := session.Read(r, session.AuthState)
 	if err != nil {
 		rollbar.ErrorError(err)

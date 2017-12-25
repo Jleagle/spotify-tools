@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
-	"github.com/Jleagle/canihave/helpers"
+	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/spotifyhelper/session"
-	spot "github.com/Jleagle/spotifyhelper/spotify"
+	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
 	"github.com/go-chi/chi"
 )
@@ -41,13 +41,13 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 		artistTrack = "artists"
 	}
 
-	client := spot.GetClient(r)
+	client := spotify.GetClient(r)
 
 	switch artistTrack {
 	case "artists":
-		vars.FullArtistPage, err = client.CurrentUsersTopArtistsOpt(spot.GetOptions(r, 50, 0, dateRange))
+		vars.FullArtistPage, err = client.CurrentUsersTopArtistsOpt(spotify.GetOptions(r, 50, 0, dateRange))
 	case "tracks":
-		vars.FullTrackPage, err = client.CurrentUsersTopTracksOpt(spot.GetOptions(r, 50, 0, dateRange))
+		vars.FullTrackPage, err = client.CurrentUsersTopTracksOpt(spotify.GetOptions(r, 50, 0, dateRange))
 	}
 
 	if err != nil {

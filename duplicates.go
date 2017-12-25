@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Jleagle/spotifyhelper/session"
-	spot "github.com/Jleagle/spotifyhelper/spotify"
+	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
 )
 
@@ -29,7 +29,7 @@ func duplicatesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vars.Playlists, err = spot.CurrentUsersPlaylists(r)
+	vars.Playlists, err = spotify.CurrentUsersPlaylists(r)
 	if err != nil {
 		returnTemplate(w, r, "error", vars, err)
 		return
