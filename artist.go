@@ -10,7 +10,7 @@ import (
 	spot "github.com/zmb3/spotify"
 )
 
-func trackHandler(w http.ResponseWriter, r *http.Request) {
+func artistHandler(w http.ResponseWriter, r *http.Request) {
 
 	vars := structs.TemplateVars{}
 
@@ -31,28 +31,44 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	trackID := spot.ID(chi.URLParam(r, "track"))
+	id := spot.ID(chi.URLParam(r, "artist"))
+
 	client := spotify.GetClient(r)
 
-	// Get track
-	vars.Track, err = client.GetTrack(trackID)
+	// Get artist
+	vars.Artist, err = client.GetArtist(id)
 	if err != nil {
 		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find track"
+		vars.ErrorMessage = "Can't find artist"
 		returnTemplate(w, r, "error", vars, err)
 		return
 	}
 
-	// Get audio features
-	audioFeats, err := client.GetAudioFeatures(trackID)
+	// Get country
+	country, err := session.Read(r, session.UserCountry)
 	if err != nil {
-		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find audio features"
 		returnTemplate(w, r, "error", vars, err)
 		return
 	}
-	vars.AudioFeatures = audioFeats[0]
 
-	returnTemplate(w, r, "track", vars, err)
+	// Get top tracks
+	vars.Tracks, err = client.GetArtistsTopTracks(id, country)
+	if err != nil {
+		vars.ErrorCode = "404"
+		vars.ErrorMessage = "Can't find artists top tracks"
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	// Get albums
+	vars.Albums, err = client.GetArtistAlbumsOpt(id, spotify.GetOptions(r, spotify.MaxArtistAlbums, 0, ""), nil)
+	if err != nil {
+		vars.ErrorCode = "404"
+		vars.ErrorMessage = "Can't find artists albums"
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+
+	returnTemplate(w, r, "artist", vars, err)
 	return
 }

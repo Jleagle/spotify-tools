@@ -10,7 +10,7 @@ import (
 	spot "github.com/zmb3/spotify"
 )
 
-func trackHandler(w http.ResponseWriter, r *http.Request) {
+func playlistHandler(w http.ResponseWriter, r *http.Request) {
 
 	vars := structs.TemplateVars{}
 
@@ -31,28 +31,17 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	trackID := spot.ID(chi.URLParam(r, "track"))
+	// Get playlist
 	client := spotify.GetClient(r)
 
-	// Get track
-	vars.Track, err = client.GetTrack(trackID)
+	vars.Playlist, err = client.GetPlaylist(chi.URLParam(r, "user"), spot.ID(chi.URLParam(r, "playlist")))
 	if err != nil {
 		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find track"
+		vars.ErrorMessage = "Can't get playlist"
 		returnTemplate(w, r, "error", vars, err)
 		return
 	}
 
-	// Get audio features
-	audioFeats, err := client.GetAudioFeatures(trackID)
-	if err != nil {
-		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find audio features"
-		returnTemplate(w, r, "error", vars, err)
-		return
-	}
-	vars.AudioFeatures = audioFeats[0]
-
-	returnTemplate(w, r, "track", vars, err)
+	returnTemplate(w, r, "playlist", vars, err)
 	return
 }

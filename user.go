@@ -10,7 +10,7 @@ import (
 	spot "github.com/zmb3/spotify"
 )
 
-func trackHandler(w http.ResponseWriter, r *http.Request) {
+func userHandler(w http.ResponseWriter, r *http.Request) {
 
 	vars := structs.TemplateVars{}
 
@@ -31,28 +31,31 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	trackID := spot.ID(chi.URLParam(r, "track"))
+	id := chi.URLParam(r, "user")
+
 	client := spotify.GetClient(r)
 
-	// Get track
-	vars.Track, err = client.GetTrack(trackID)
+	// Get profile
+	vars.User, err = client.GetUsersPublicProfile(spot.ID(id))
 	if err != nil {
 		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find track"
+		vars.ErrorMessage = "Can't find user"
+		returnTemplate(w, r, "error", vars, err)
+		return
+	}
+	if vars.User.DisplayName == "" {
+		vars.User.DisplayName = vars.User.ID
+	}
+
+	// Get playlists
+	vars.UserPlaylists, err = client.GetPlaylistsForUser(id)
+	if err != nil {
+		vars.ErrorCode = "404"
+		vars.ErrorMessage = "Can't find user playlists"
 		returnTemplate(w, r, "error", vars, err)
 		return
 	}
 
-	// Get audio features
-	audioFeats, err := client.GetAudioFeatures(trackID)
-	if err != nil {
-		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find audio features"
-		returnTemplate(w, r, "error", vars, err)
-		return
-	}
-	vars.AudioFeatures = audioFeats[0]
-
-	returnTemplate(w, r, "track", vars, err)
+	returnTemplate(w, r, "user", vars, err)
 	return
 }

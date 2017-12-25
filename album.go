@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/Jleagle/spotifyhelper/spotify"
@@ -10,7 +11,7 @@ import (
 	spot "github.com/zmb3/spotify"
 )
 
-func trackHandler(w http.ResponseWriter, r *http.Request) {
+func albumHandler(w http.ResponseWriter, r *http.Request) {
 
 	vars := structs.TemplateVars{}
 
@@ -31,28 +32,18 @@ func trackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	trackID := spot.ID(chi.URLParam(r, "track"))
+	// Get album
 	client := spotify.GetClient(r)
 
-	// Get track
-	vars.Track, err = client.GetTrack(trackID)
+	vars.Album, err = client.GetAlbum(spot.ID(chi.URLParam(r, "album")))
 	if err != nil {
 		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find track"
+		vars.ErrorMessage = err.Error() //todo, copy this to other places
 		returnTemplate(w, r, "error", vars, err)
 		return
 	}
+	vars.Album.AlbumType = strings.Title(vars.Album.AlbumType)
 
-	// Get audio features
-	audioFeats, err := client.GetAudioFeatures(trackID)
-	if err != nil {
-		vars.ErrorCode = "404"
-		vars.ErrorMessage = "Can't find audio features"
-		returnTemplate(w, r, "error", vars, err)
-		return
-	}
-	vars.AudioFeatures = audioFeats[0]
-
-	returnTemplate(w, r, "track", vars, err)
+	returnTemplate(w, r, "album", vars, err)
 	return
 }
