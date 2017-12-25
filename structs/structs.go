@@ -28,4 +28,5 @@ type TemplateVars struct {
 	FullTrackPage   *spotify.FullTrackPage
 	TimeRange       string
 	ArtistTrack     string
+	Enviroment      string
 }

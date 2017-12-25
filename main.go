@@ -90,6 +90,7 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 	}
 
 	pageData.Highlight = r.URL.Query().Get("highlight")
+	pageData.Enviroment = os.Getenv("ENV")
 
 	// Get current app path
 	_, file, _, ok := runtime.Caller(0)

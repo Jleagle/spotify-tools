@@ -61,11 +61,13 @@
 
 <div class="container">
 
+{{if ne .Enviroment "local"}}
     <div>
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <ins class="adsbygoogle mb-3" style="display:block" data-ad-client="ca-pub-5468884371420326" data-ad-slot="4446626684" data-ad-format="auto"></ins>
         <script> (adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
+{{ end }}
 
 {{if .Flashes}}
     <div class="alert alert-primary" role="alert">
