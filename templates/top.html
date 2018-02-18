@@ -1,6 +1,6 @@
 {{define "top"}} {{ template "header" .}}
 
-<h1>Your top tracks</h1>
+<h1>Your Top Tracks</h1>
 
 <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
@@ -10,13 +10,13 @@
         <a class="nav-link {{ if .FullTrackPage}}active{{end}}" href="/top/tracks/{{.TimeRange}}">Tracks</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ if eq .TimeRange "short"}}active{{end}}" href="/top/{{.ArtistTrack}}/short">4 Weeks</a>
+        <a class='nav-link {{ if eq .TimeRange "short"}}active{{end}}' href="/top/{{.ArtistTrack}}/short">4 Weeks</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ if eq .TimeRange "medium"}}active{{end}}" href="/top/{{.ArtistTrack}}/medium">6 Months</a>
+        <a class='nav-link {{ if eq .TimeRange "medium"}}active{{end}}' href="/top/{{.ArtistTrack}}/medium">6 Months</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ if eq .TimeRange "long"}}active{{end}}" href="/top/{{.ArtistTrack}}/long">Several Years</a>
+        <a class='nav-link {{ if eq .TimeRange "long"}}active{{end}}' href="/top/{{.ArtistTrack}}/long">Several Years</a>
     </li>
 </ul>
 
