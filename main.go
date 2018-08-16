@@ -59,7 +59,7 @@ func main() {
 	filesDir := filepath.Join(workDir, "assets")
 	fileServer(r, "/assets", http.Dir(filesDir))
 
-	log.Fatal(http.ListenAndServe(":8084", r))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
 func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageData structs.TemplateVars, err error) {
