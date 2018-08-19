@@ -31,12 +31,12 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var dateRange = chi.URLParam(r, "range")
-	if !helpers.InArray(dateRange, []string{"long", "medium", "short"}) {
+	if !inArray(dateRange, []string{"long", "medium", "short"}) {
 		dateRange = "short"
 	}
 
 	artistTrack := chi.URLParam(r, "type")
-	if !helpers.InArray(artistTrack, []string{"artists", "tracks"}) {
+	if !inArray(artistTrack, []string{"artists", "tracks"}) {
 		artistTrack = "artists"
 	}
 
@@ -59,4 +59,13 @@ func topHandler(w http.ResponseWriter, r *http.Request) {
 
 	returnTemplate(w, r, "top", vars, nil)
 	return
+}
+
+func inArray(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
