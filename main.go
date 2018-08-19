@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Jleagle/go-helpers/rollbar"
+	"github.com/Jleagle/spotifyhelper/logging"
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/Jleagle/spotifyhelper/structs"
 	"github.com/dustin/go-humanize"
@@ -66,23 +66,23 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 
 	// Log errors
 	if err != nil {
-		rollbar.ErrorError(err)
+		logging.Error(err)
 	}
 
 	// Check if logged in
 	pageData.LoggedIn, err = session.IsLoggedIn(r)
 	if err != nil {
-		rollbar.ErrorError(err)
+		logging.Error(err)
 	}
 
 	pageData.Flashes, err = session.GetFlashes(w, r)
 	if err != nil {
-		rollbar.ErrorError(err)
+		logging.Error(err)
 	}
 
 	pageData.LoggedInID, err = session.Read(r, session.UserID)
 	if err != nil {
-		rollbar.ErrorError(err)
+		logging.Error(err)
 	}
 
 	if page == "error" && err != nil {
@@ -109,13 +109,13 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 
 	t, err := template.New("t").Funcs(getTemplateFuncMap()).ParseFiles(always...)
 	if err != nil {
-		rollbar.ErrorCritical(err)
+		logging.Critical(err)
 	}
 
 	// Write a respone
 	err = t.ExecuteTemplate(w, page, pageData)
 	if err != nil {
-		rollbar.ErrorCritical(err)
+		logging.Critical(err)
 	}
 }
 

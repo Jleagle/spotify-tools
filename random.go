@@ -4,7 +4,6 @@ import (
 	"math/rand"
 	"net/http"
 
-	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
@@ -34,7 +33,7 @@ func randomHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	client := spotify.GetClient(r)
-	search := helpers.RandomString(1, "aeiou")
+	search := randomString(1, "aeiou")
 	offset := rand.Intn(1000)
 	options := spotify.GetOptions(r, 3, offset, "")
 
@@ -56,4 +55,12 @@ func randomHandler(w http.ResponseWriter, r *http.Request) {
 
 	returnTemplate(w, r, "random", vars, err)
 	return
+}
+
+func randomString(n int, bytes string) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = bytes[rand.Intn(len(bytes))]
+	}
+	return string(b)
 }

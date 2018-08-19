@@ -4,8 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Jleagle/go-helpers/helpers"
-	"github.com/Jleagle/go-helpers/rollbar"
+	"github.com/Jleagle/spotifyhelper/logging"
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
@@ -27,7 +26,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create random state
-	state := helpers.RandomString(6, "abcdefghijklmnopqrstuvwxyz")
+	state := randomString(6, "abcdefghijklmnopqrstuvwxyz")
 	err = session.Write(w, r, session.AuthState, state)
 	if err != nil {
 		returnTemplate(w, r, "error", vars, err)
@@ -70,7 +69,7 @@ func loginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	auth := spotify.GetAuthenticator(r)
 	state, err := session.Read(r, session.AuthState)
 	if err != nil {
-		rollbar.ErrorError(err)
+		logging.Error(err)
 	}
 
 	// Check state and get token
@@ -113,7 +112,7 @@ func postlogin(w http.ResponseWriter, r *http.Request) {
 	session.SetFlash(w, r, "Logged In :)")
 	lastPage, err := session.Read(r, session.LastPage)
 	if err != nil {
-		rollbar.ErrorError(err)
+		logging.Error(err)
 	}
 
 	http.Redirect(w, r, lastPage, 302)

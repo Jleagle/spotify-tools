@@ -20,20 +20,3 @@
 #  name = "github.com/x/y"
 #  version = "2.4.0"
 
-
-[[constraint]]
-  name = "github.com/Jleagle/go-helpers"
-
-[[constraint]]
-  name = "github.com/go-chi/chi"
-  version = "3.0.0"
-
-[[constraint]]
-  name = "github.com/gorilla/sessions"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/zmb3/spotify"
-
-[[constraint]]
-  name = "golang.org/x/oauth2"

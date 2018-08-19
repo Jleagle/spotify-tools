@@ -3,7 +3,6 @@ package main
 import (
 	"net/http"
 
-	"github.com/Jleagle/go-helpers/helpers"
 	"github.com/Jleagle/spotifyhelper/session"
 	"github.com/Jleagle/spotifyhelper/spotify"
 	"github.com/Jleagle/spotifyhelper/structs"
