@@ -7,9 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"path"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 
@@ -92,14 +90,12 @@ func returnTemplate(w http.ResponseWriter, r *http.Request, page string, pageDat
 	pageData.Highlight = r.URL.Query().Get("highlight")
 	pageData.Enviroment = os.Getenv("ENV")
 
-	// Get current app path
-	_, file, _, ok := runtime.Caller(0)
-	if !ok {
-		//logger.Err("No caller information")
-	}
-	folder := path.Dir(file)
-
 	// Load templates needed
+	folder := os.Getenv("SPOTIFY_PATH")
+	if folder == "" {
+		folder = "/root"
+	}
+
 	always := []string{
 		folder + "/templates/header.html",
 		folder + "/templates/footer.html",
